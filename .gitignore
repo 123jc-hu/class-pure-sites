@@ -1,0 +1,19 @@
+# Data and derived arrays are not part of this repository
+*.mat
+*.npy
+*.npz
+*.pt
+*.pth
+*.nii
+*.nii.gz
+# LaTeX build output
+paper/build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/

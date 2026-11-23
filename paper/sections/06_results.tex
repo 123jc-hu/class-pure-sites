@@ -1,0 +1,97 @@
+% Section 6 -- Results (condensed 2026-11-23; moved material is in the Supplementary Material, Section S3).
+\section{Results}\label{sec:results}
+
+Unless stated otherwise, results are for ABIDE-I with the CC200 atlas, as means over $50$ repeats with percentile ranges in brackets and, for paired differences, the number of repeats with the expected sign.
+
+\subsection{Class purity costs accuracy and teaches a site shortcut}\label{sec:res-problem}
+
+With one site per class, the class-pure design P reached a within-site AUC of $0.578$ on new sites, against $0.636$ for the mixed design M trained on the same sites and the same number of participants (Fig.~\ref{fig:problem}a). The reverse-set AUC of P was $0.03$: the model ranked almost every reverse-set participant by their site (Fig.~\ref{fig:problem}b). More sites per class reduced both effects; from $k=1$ to $k=6$ the cost M$-$P fell from $0.057$ to $0.015$ and the reverse-set AUC rose to $0.36$. More participants did not. At $k=2$, quadrupling $n$ from $20$ to $80$ raised the within-site AUC of P by $0.034$ and that of M by $0.080$, and the reverse-set AUC of P fell from $0.16$ to $0.08$ (Fig.~\ref{fig:problem}c), as expected from the site term $(2/k)\Sigma_u$ of Proposition~\ref{prop:pure}.
+
+The shortcut is available because sites are easy to recognise: a multinomial logistic regression identified the site with a balanced accuracy of $0.72$ to $0.92$ in the three cohorts (chance at most $0.17$), also within one diagnosis, and the score of the class-pure model ranked participants of the same diagnosis by their site with an AUC of $0.92$ at $k=2$ (Supplementary Fig.~\ref{fig:sitecode}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_problem.pdf}
+\caption{Class purity costs accuracy on new sites and teaches a site shortcut that more sites reduce and more subjects do not (ABIDE-I, CC200). (a)~Within-site AUC on held-out test sites for the class-pure design P (red) and the mixed design M (grey), trained on the same sites with $n=40$ subjects per class; numbers at the top are the mean cost M$-$P. (b)~Reverse-set AUC of P; values in the shaded region below chance mean that the model ranks reverse-set subjects by their site. (c)~At $k=2$, more subjects per class raise the within-site AUC of M more than that of P and lower the reverse-set AUC of P (hollow markers, dashed line). Small dots are single repeats ($50$ per condition), large markers are means.}
+\label{fig:problem}
+\end{figure}
+
+\subsection{Subject-level cross-validation overstates class-pure models}\label{sec:res-eval}
+
+At $k=2$, subject-level cross-validation estimated a within-site AUC of $0.94$ for a model that reached $0.575$ on new sites, an overestimate of $0.37$ in all $50$ repeats; it shrank with $k$ but remained $0.19$ at $k=6$ (Fig.~\ref{fig:evaluation}a--c). LSPO had a mean error of $-0.05$ at $k=2$ and below $0.01$ in magnitude at $k=4$ and $6$, and its mean absolute error was less than half that of subject-level cross-validation at every $k$. Its spread remained large (mean absolute error $0.09$--$0.16$), and neither estimator tracked the test-site value from one repeat to the next, so for a single class-pure study the LSPO value remains a rough estimate.
+
+The natural collections showed the same optimism (Fig.~\ref{fig:evaluation}d). The descriptive DiD (Section~\ref{sec:construction}) was, for the case-only KUL\_3, $+0.30$ [$0.24$, $0.35$], an exploratory AUC version of a pre-specified analysis of sensitivity; for the control-only WashU it was $+0.30$ [$0.28$, $0.34$], pre-specified; and for Pittsburgh, with $92$ controls and $4$ cases, $+0.50$ (Supplementary Section~\ref{app:more}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_evaluation.pdf}
+\caption{Subject-level cross-validation overstates class-pure models, and leave-site-pair-out does not. (a--c)~Estimates of the within-site AUC of P from the training data against the value reached on held-out test sites (ABIDE-I, CC200, $n=40$): subject-level five-fold cross-validation (red) and LSPO (blue). Dots are single repeats ($50$ per panel), large markers are means, the dashed line is $y=x$, and the mean signed error is given above each panel. (d)~Naturally class-pure collections: AUC under subject-level cross-validation (open marker) and leave-one-site-out evaluation (filled marker) for the collection (red) and for mixed-site subjects of the same class (grey); DiD is the difference between the two drops. KUL\_3 (ABIDE-II) contains only cases; WashU only controls; Pittsburgh $92$ controls and $4$ cases (ADHD-200).}
+\label{fig:evaluation}
+\end{figure}
+
+\subsection{Methods without bridges, including two published ones, keep the shortcut}\label{sec:res-pureonly}
+
+The methods we tested on class-pure data did not materially reduce the measured shortcut. Tuning by LSPO, projecting out the site-mean subspace and Group DRO with one group per site changed the reverse-set AUC by less than $0.005$. Per-site standardization gave an AUC of exactly $0.5$, since subtracting the site mean also subtracts the class mean. One-class models avoided the shortcut only by learning no diagnostic signal (within-site AUC $0.50$--$0.55$) and met neither of the predictions we had made for them (Supplementary Section~\ref{app:more}).
+
+Two published multi-site methods failed in the two ways that Section~\ref{sec:theory} describes (Supplementary Fig.~\ref{fig:published}). With the reverse set kept out of training, as in a real class-pure collection, the population graph network~\cite{parisot2018} showed the strongest shortcut of all models (reverse-set AUC $0.02$ at $k=2$ and $0.22$ at $k=4$, below $0.5$ in all $50$ repeats), because its graph links participants of the same site; subject-level cross-validation rated it at $1.00$ against $0.56$ on new sites. The MIDA pipeline~\cite{kunda2023} instead lost most of its diagnostic signal (within-site AUC $0.52$ and $0.53$, against $0.61$ with mixed training sites); with a finite dimension and penalty it need not reach exact invariance, so this is an observation about these runs. In the original transductive setting, the reverse set entered training without labels and both methods looked better (reverse-set AUC up to $0.58$), plausibly because these participants acted as unlabeled bridges; this post hoc comparison also changes the pool size, the feasible MIDA dimension and the scoring. Two-way bridging raised the reverse-set AUC over B0 by $0.29$ to $0.34$ for the graph network and $0.08$ to $0.18$ for MIDA.
+
+
+\subsection{Bridging works through cross-class contrast, and $L$ ranks designs before training}\label{sec:res-bridge}
+
+A few participants of the missing class at each site recovered much of the lost accuracy. With two-way bridging and $b=5$ at $k=2$, the pooled model C0 improved the within-site AUC from $0.575$ to $0.614$ and the reverse-set AUC from $0.12$ to $0.30$; with $b=10$ at $k=4$ the reverse-set AUC reached $0.68$. The added participants had to belong to the other class: against the same-class control S0, which adds the same number of participants of each site's own class, C0 was higher by $0.015$--$0.044$ in within-site AUC and $0.10$--$0.29$ in reverse-set AUC across the four $b=5$ cells, based on the $15$ to $35$ repeats in which both designs were feasible (Fig.~\ref{fig:bridging}a,b).
+
+The design coefficient ordered the designs by their shortcut before any model was trained (Fig.~\ref{fig:bridging}d). The rank correlation between $L$ and the reverse-set AUC of C0 was $-0.997$ with CC200 and $-0.991$ with the Harvard-Oxford atlas, but most of these cells had been inspected before Proposition~\ref{prop:L} was written, so this correlation is exploratory. Two tests were specified in advance. Spreading a fixed budget evenly over sites, as Corollary~\ref{cor:alloc} prescribes, gave a higher reverse-set AUC than concentrating it on half of the sites, by $0.040$ (CC200) and $0.037$ (Harvard-Oxford) at $k=4$ (Fig.~\ref{fig:bridging}c), and on ABIDE-II the rank correlation over $11$ new cells was $-0.970$.
+
+ComBat fitted on the bridged training set reached within-site AUCs within $0.01$ of C0, but its reverse-set AUC failed a pre-specified null test. Without bridges, taking cases and controls from two collections of one institution raised the reverse-set AUC from $0.20$ to $0.55$ across three institutions, descriptively (Supplementary Section~\ref{app:more}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_bridging.pdf}
+\caption{Cross-class bridges outperform same-class additions, even allocation works best, and $L$ ranks designs before training (ABIDE-I). (a, b)~Is crossing needed? Paired differences between the pooled model with cross-class bridges (C0) and with the same number of added subjects of each site's own class (S0), in within-site AUC and in reverse-set AUC; brackets give the repeats in which both designs were feasible. (c)~How to spend a budget? Reverse-set AUC of C0 at $b=5$ with the budget spread evenly minus concentrated on half of the sites, on the reverse-set subjects common to both designs; circles CC200, squares Harvard-Oxford, light blue one-way and dark blue two-way bridging. (d)~Does $L$ rank designs? $L$ against the mean reverse-set AUC of C0 in every design cell; shade encodes the design, marker shape the cohort and atlas, hollow markers the concentrated cells. Dots are single repeats, large markers are means.}
+\label{fig:bridging}
+\end{figure}
+
+\subsection{Within-site estimation keeps the reverse set above chance}\label{sec:res-within}
+
+Training only on within-site contrasts removed most of what remained of the shortcut. Across the $12$ bridged cells, the reverse-set AUC of L3 lay between $0.59$ and $0.67$, whereas that of C0 ranged from $0.15$ to $0.68$ and depended strongly on $L$ (Fig.~\ref{fig:tradeoff}). L3 had the higher reverse-set AUC in all $50$ repeats of $11$ of the $12$ cells; in the exception, $k=4$, $b=10$ two-way, $L$ is close to zero and the two estimators performed alike. With two-way bridging, the within-site AUC of L3 differed from that of C0 by $-0.003$ to $+0.009$. With one-way bridging and few bridges, L3 paid a price ($-0.029$ at $k=2$, $b=2$), because only half of the sites contribute pairs.
+
+The protection came from the objective itself: mixing a weight of only $0.1$ of the pooled loss into L3 lowered the reverse-set AUC from $0.60$ to $0.33$, and selecting the weight by within-site AUC chose the pure within-site objective in only $41\%$ of repeats, because within-site AUC cancels the site offsets of a fixed model (Proposition~\ref{prop:leak}(c); Supplementary Fig.~\ref{fig:lambda}). A linear L3 head on a frozen self-supervised encoder reached a reverse-set AUC of $0.59$ against at most $0.39$ for deep baselines; one of four pre-specified cell-wise criteria was not met (Supplementary Section~\ref{app:deep}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig3_tradeoff.pdf}
+\caption{The within-site estimator keeps the reverse-set AUC above chance from the smallest number of bridges, whereas the pooled model approaches it only as $L$ falls. Within-site test AUC against reverse-set AUC as bridges are added (ABIDE-I, CC200; means over $50$ repeats). Each point is one number of bridges per site $b$; $b=0$ is the class-pure baseline, for which L3 is undefined. Red: pooled model C0; blue: within-site estimator L3.}
+\label{fig:tradeoff}
+\end{figure}
+
+\subsection{The findings replicate on a second cohort and a second disorder}\label{sec:res-replication}
+
+Table~\ref{tab:replication} lists the pre-specified replication criteria, and Fig.~\ref{fig:replication} the corresponding results. On ABIDE-II, the four assessable criteria were met; the same-class control could not be assessed because fewer than $20$ repeats were feasible. On ADHD-200, where only $k=1$ could be constructed, the pooled model ranked the reverse set almost entirely by site and L3 restored it at equal test AUC, but the cost of purity did not meet its threshold; even the full training pool reached a within-site AUC of only $0.513$, so this cohort carries little diagnostic signal in connectivity, and L3 removed the shortcut without learning more about ADHD.
+
+The pre-specified criteria for the cost of purity, the bias of subject-level cross-validation and the cross-class effect of bridging were also met on the $873$ ABIDE-I participants passing all quality ratings, with the Harvard-Oxford atlas and with BrainNetCNN~\cite{kawahara2017}, although the BrainNetCNN cost only just exceeded its threshold (Supplementary Section~\ref{app:robust}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_replication.pdf}
+\caption{The three main findings replicate on ABIDE-II (Gordon atlas, $n=20$; top row) and on ADHD-200 (CC200, $n=20$, only $k=1$; bottom row). (a, d)~Within-site AUC of P (red) and M (grey) and reverse-set AUC of P (hollow markers, dashed line). (b, e)~Estimates from training data against the within-site AUC on new sites, for subject-level cross-validation (red) and LSPO (blue), which requires $k\ge2$. (c, f)~Reverse-set AUC of C0 (red) and L3 (blue) in each bridged cell; no arrow is drawn where the two differ by less than $0.04$. Dots are single repeats, large markers are means, and dashed lines mark chance or $y=x$.}
+\label{fig:replication}
+\end{figure}
+
+\begin{table}[tbp]
+\centering
+\caption{Pre-specified replication criteria on ABIDE-II (Gordon atlas, $n=20$) and ADHD-200 (CC200, $n=20$, $k=1$ only). n.a.: not assessable in this cohort.}
+\label{tab:replication}
+\makebox[\linewidth][c]{\begin{minipage}{15cm}\centering
+\begin{tabular}{p{0.34\linewidth}p{0.27\linewidth}p{0.27\linewidth}}
+\toprule
+Criterion & ABIDE-II & ADHD-200\\
+\midrule
+R1: cost M$-$P $\ge0.03$ at the smallest $k$, and smaller cost with more sites & met ($0.050\to0.000$) & first half not met ($0.008$); trend n.a.\\
+R2: $E_{\mathrm{subj}}$ overestimates by $\ge0.10$ & met ($+0.38$) & met ($+0.46$); LSPO n.a.\\
+R3: C0 $>$ S0 in test and reverse-set AUC & n.a. ($<20$ repeats) & met ($+0.013$, $+0.076$)\\
+R4: L3 reverse-set AUC $\ge0.5$ and above C0; test cost $\ge-0.01$ (two-way) & met ($0.63$ vs.\ $0.39$; $-0.006$) & met ($0.52$ vs.\ $0.08$; $+0.004$)\\
+R5: rank correlation of $L$ with C0 reverse-set AUC & met ($-0.970$, 11 cells) & n.a. (5 cells)\\
+\bottomrule
+\end{tabular}
+\end{minipage}}
+\end{table}

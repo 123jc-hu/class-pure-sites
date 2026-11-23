@@ -1,0 +1,45 @@
+% Section 5 -- Experimental setup (condensed 2026-11-23; details in the Supplementary Material).
+\section{Experimental setup}\label{sec:setup}
+
+To measure the effect of class-pure sites against a known reference, we construct class-pure training sets from cohorts in which most sites contain both classes and evaluate on held-out mixed sites; two naturally class-pure collections provide real examples. All criteria were fixed in writing before the corresponding results were computed (Supplementary Section~\ref{app:criteria}).
+
+\subsection{Datasets}\label{sec:data}
+
+Table~\ref{tab:data} summarizes the three cohorts. Collections from the same institution were merged into one site, because they may share a scanner. For ABIDE-I we used the Preprocessed Connectomes Project release~\cite{craddock2013pcp} of ABIDE-I~\cite{dimartino2014} (CPAC pipeline, band-pass filtering, no global signal regression), with all $1035$ subjects that have a functional file. Each participant is represented by the Fisher-$z$ transformed Pearson correlations between the $200$ regions of the CC200 atlas~\cite{craddock2012}. ABIDE-II~\cite{dimartino2017} served as an independent replication with different subjects, preprocessing (DCAN, censoring at $0.2$\,mm framewise displacement, at least $240$\,s retained) and atlas (Gordon parcellation~\cite{gordon2016} plus subcortical regions). ADHD-200 served as a second disorder (Athena release~\cite{bellec2017}, CC200 with $190$ non-empty regions, first resting-state scan passing quality control).
+
+\begin{table}[tbp]
+\centering
+\caption{Cohorts and the class-pure constructions used in this study. $n$: subjects per class in a constructed training set; $k$: class-pure sites per class; $b$: bridging subjects per site.}
+\label{tab:data}
+\makebox[\linewidth][c]{\begin{minipage}{15cm}\centering
+\begin{tabular}{>{\raggedright}p{0.25\linewidth}>{\raggedright}p{0.2\linewidth}>{\raggedright}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.2\linewidth}}
+\toprule
+& ABIDE-I & ABIDE-II & ADHD-200\\
+\midrule
+Subjects (case/control) & 505/530 & 248/320 & 325/540\\
+Features (edges) & 19,900 & 61,776 & 17,955\\
+Sites used for construction & 17 & 13 & 5\\
+Held-out test sites per repeat & 5 & 4 & 3\\
+Constructed designs & $n=40$, $k\in\{1,2,4,6\}$ & $n=20$, $k\in\{1,2,4\}$ & $n=20$, $k=1$\\
+Bridging & $b\in\{2,5,10\}$, $k\in\{2,4\}$ & $b\in\{2,5\}$, $k\in\{2,4\}$ & $b\in\{2,5\}$\\
+Repeats & 50 & 50 & 60\\
+Natural class-pure collection & n.a. & KUL\_3 (ASD only) & WashU (TD only)\\
+\bottomrule
+\end{tabular}
+\end{minipage}}
+\end{table}
+
+\subsection{Constructing class-pure training sets}\label{sec:construction}
+
+In each repeat, some sites are held out for testing. From the remaining pool, $k$ sites contribute only cases and $k$ other sites only controls, with $n$ subjects per class (design P, the pure baseline B0). The mixed design M uses the same $2k$ sites and the same number of subjects but draws both classes from every site, so that M$-$P is the cost of class purity. Participants of the opposite class who remain at the class-pure training sites form the reverse set. Bridged designs add $b$ subjects of the missing class to each case site (one-way) or to every site (two-way). The same-class control S0 adds the same number of subjects of the class that each site already contributes. Within a repeat, every method is trained on the same subjects and evaluated on the same test and reverse sets, and contrasts are paired differences. In ABIDE-I we also vary $n\in\{20,40,80\}$ at $k=2$. Design parameters were set from the site tables before any classification result on the cohort was computed. A site can take a role only if it has enough participants of that class, so the construction controls part, but not all, of the difference between case sites and control sites (Section~\ref{sec:limitations}).
+
+For the natural collections KUL\_3 (ABIDE-II, $21$ adult male cases) and WashU (ADHD-200, $47$ controls), we compare subject-level five-fold cross-validation with leave-one-site-out evaluation on the mixed sites plus the collection. The difference between the drop in AUC for the collection and for mixed-site participants of the same class, each scored against the opposite class from the mixed sites (DiD), describes how much more the collection loses. Both AUCs pool out-of-fold scores, and the collection also differs from the mixed sites in population, so the DiD is descriptive, not causal.
+
+\subsection{Methods compared}\label{sec:methods}
+
+All linear models are $\ell_2$-penalized logistic regressions on standardized features. For the pooled models (B0, M, S0, C0), $C\in\{10^{-3},10^{-2},10^{-1},1\}$ is selected by stratified five-fold cross-validation over training subjects, as in common practice. L3 (Eq.~\ref{eq:L3}) uses $C\in\{10^{-3},\dots,10\}$ selected as in Section~\ref{sec:estimation}; L1 is logistic regression with one intercept per site, which absorbs additive shifts but must drop class-pure sites, whose intercepts diverge. Methods that use only class-pure data comprised tuning by LSPO, removal of the site-mean subspace, per-site standardization, Group DRO with one group per site~\cite{sagawa2020}, and three one-class models; ComBat with diagnosis as a protected covariate was applied to bridged designs, fitted once on the outer training set. We reproduced two published multi-site methods with public code: the population graph convolutional network~\cite{parisot2018}, which connects participants by sex, site and feature similarity, and the pipeline of Kunda et al.~\cite{kunda2023}, which reduces the dependence of tangent-space connectivity on site by maximum independence domain adaptation (MIDA). Each reproduced its published ABIDE-I accuracy within three percentage points. Both are transductive, so we ran them in their original setting and, through an extension of the authors' code added after the first results, with the reverse set kept out of training and scored afterwards (Supplementary Section~\ref{app:more}). Supplementary Table~\ref{tab:designs} shows how the main designs and methods differ. M versus P gives the cost of class purity, C0 versus S0 tests whether the added participants must belong to the other class, and L3 versus C0 compares two complete training procedures on the same participants, which differ in the objective and in how $C$ is selected.
+
+
+\subsection{Metrics}\label{sec:metrics}
+
+The primary metric is the within-site AUC, computed in each held-out test site and averaged across test sites; we also report the reverse-set AUC (Table~\ref{tab:aucs}). In every AUC, tied scores count one half. Each metric is computed within a repeat and then averaged across repeats. Ranges are the $2.5$th and $97.5$th percentiles across repeats; because repeats share subjects, they describe variability across overlapping splits and are not confidence intervals. For evaluation estimators, the reference is the within-site AUC of the same training design on the held-out test sites. Because repeats share participants, we applied the corrected resampled $t$-test~\cite{nadeau2003} with Holm correction within pre-specified families; its error rate under site resampling is not known, so we treat it as an approximate check (all $82$ tests in Supplementary Section~\ref{app:robust}) and rest the conclusions on replication across three cohorts with no shared participants.

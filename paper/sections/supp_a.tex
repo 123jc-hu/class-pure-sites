@@ -1,0 +1,183 @@
+% Appendices A-D (written 2026-11-23 from docs/THEORY_A_PROOFS.md and the saved outputs; symbols as in Section 3).
+\section{Proofs}\label{app:proofs}
+
+Throughout, the model is Eq.~\eqref{eq:model}; the counts $a_s,t_s$ are fixed or independent of $u$ and $\varepsilon$, with $N_A,N_T>0$. The $\varepsilon_i$ are i.i.d.\ with mean $0$ and covariance $\Sigma_\varepsilon$ and independent of the $u_s$. $\Delta$ is a mean difference, not a causal effect. The AUC of a score $f$ is $P(f_{\mathrm{case}}>f_{\mathrm{ctrl}})+\tfrac12P(f_{\mathrm{case}}=f_{\mathrm{ctrl}})$, so a constant score has AUC $0.5$.
+
+\subsection{Proposition~\ref{prop:pure}}
+
+\emph{Part (a).} At a class-pure site $s$ every participant has $y_i=\gamma_s$. Under the second parameter value an observation has mean $\mu+(\Delta+\delta)\gamma_s+(u_s-\delta\gamma_s)=\mu+\Delta\gamma_s+u_s$, the same as under the first. Labels and the law of $\varepsilon$ are unchanged, so the training data have the same distribution under both values, and so does any estimator $T$. With $Z=T-\Delta$,
+\[
+\tfrac12\big(\mathbb{E}\|Z\|^2+\mathbb{E}\|Z-\delta\|^2\big)=\mathbb{E}\|Z-\delta/2\|^2+\|\delta\|^2/4\ \ge\ \|\delta\|^2/4,
+\]
+and the larger of the two risks is at least their average.
+
+\emph{Part (b).} Let $\hat\Delta$ be the mean of the $k$ case-site means minus the mean of the $k$ control-site means, each site holding $m$ participants. Substituting Eq.~\eqref{eq:model},
+\[
+\hat\Delta=\Delta+\Big(\frac1k\sum_{\gamma_s=1}u_s-\frac1k\sum_{\gamma_s=0}u_s\Big)+(\bar\varepsilon_A-\bar\varepsilon_T).
+\]
+The common mean $m_u$ cancels in the bracket, so (A1$'$) suffices for unbiasedness. Under (A1) the bracket has covariance $(2/k)\Sigma_u$ and the noise term $(2/(km))\Sigma_\varepsilon$; the two are independent. The statement concerns the mean contrast, not the AUC of a particular classifier.
+
+\subsection{Proposition~\ref{prop:L}}
+
+Under (A0), $\bar x_A=\mu+\Delta+\sum_s(a_s/N_A)u_s+\bar\varepsilon_A$ and $\bar x_T=\mu+\sum_s(t_s/N_T)u_s+\bar\varepsilon_T$; subtracting gives the decomposition. Since $\sum_sc_s=1-1=0$, the mean $m_u$ cancels, and the contrast is unbiased under (A1$'$). Independent sites contribute $\sum_sc_s^2\Sigma_u=L\Sigma_u$, and cases and controls are disjoint, which gives the noise term. If site effects are correlated or heteroscedastic, the site term is $\sum_{s,r}c_sc_r\operatorname{Cov}(u_s,u_r)$; if (A1$'$) fails, a bias $\sum_sc_s\mathbb{E}u_s$ appears.
+
+$L=0$ if and only if $c_s=0$ for every site, that is, $a_s/N_A=t_s/N_T$, which for a non-empty site means that its case fraction equals $N_A/(N_A+N_T)$.
+
+For the symmetric designs, each class occupies $k$ originally pure sites with $m$ participants. With two-way bridging, $N_A=N_T=k(m+b)$, and $c_s=\pm(m-b)/(k(m+b))$ on case and control sites. With one-way bridging, $N_A=km$ and $N_T=k(m+b)$, and $c_s=\pm m/(k(m+b))$. The class-pure design is $b=0$. Squaring and summing over $2k$ sites gives Eq.~\eqref{eq:L-special}. In all three designs $c_s=+\alpha$ at the sites that contribute mainly cases and $-\alpha$ at the others, with $\alpha=\sqrt{L/(2k)}$, provided that $b\le m$ in the two-way design; for $b>m$ the signs swap.
+
+\subsection{Corollary~\ref{cor:alloc}}
+
+Add $b_j\ge0$ controls to case site $j$ and $d_j\ge0$ cases to control site $j$, with $U=\sum_jb_j$, $V=\sum_jd_j$ and $B=U+V$. The statements are for real-valued allocations.
+
+\emph{Part (i).} For fixed $U$ and $V$ the totals $N_A=km+V$ and $N_T=km+U$ are fixed, and
+\[
+L=\sum_j\Big(\frac m{N_A}-\frac{b_j}{N_T}\Big)^2+\sum_j\Big(\frac{d_j}{N_A}-\frac m{N_T}\Big)^2
+\]
+is a separable, strictly convex function of the $b_j$ and of the $d_j$, each set under one linear constraint. The minimum is at equal allocation. With integer counts and $k$ not dividing $U$, the most even integer allocation is optimal by the same separable convexity.
+
+\emph{Part (ii).} Write $u=U/k$, $v=V/k$, $t=B/k$ and $p=uv$. With equal allocation within each side, a case site has $c=\frac1k\big[\frac m{m+v}-\frac u{m+u}\big]=\frac1k\frac{m^2-uv}{(m+u)(m+v)}$ and a control site the negative, so
+\[
+L=\frac2k\,g(p)^2,\qquad g(p)=\frac{m^2-p}{m^2+mt+p}.
+\]
+Here $g'(p)=-(2m^2+mt)/(m^2+mt+p)^2<0$. If $B\le2km$, then $t\le2m$ and $p\le t^2/4\le m^2$, so $g\ge0$ and $g^2$ decreases in $p$; $p$ is largest at $u=v$. The condition cannot be dropped: for $k=1$, $m=2$, $B=5$, the split $(u,v)=(4,1)$ gives $uv=m^2$ and $L=0$, the even split gives $L=0.0247$, and the best near-even integer split $(3,2)$ gives $L=0.02$. All experimental cells have $b\le m$ and hence $B\le2km$.
+
+\subsection{Proposition~\ref{prop:within}}
+
+\emph{Part (a).} For a case $a$ and a control $t$ at the same site, $x_a-x_t=\Delta+\varepsilon_a-\varepsilon_t$ under (A0). A deterministic procedure whose input is only the set of these differences, with a fixed penalty and tuning rule, receives the same input after any shift $u_s\mapsto u_s+\eta_s$.
+
+\emph{Part (b).} Assume $H>0$, that is, at least one training site holds both classes. For a scalar feature, regress $x$ on $y$ and one indicator per site. By the Frisch--Waugh--Lovell theorem the slope is $\sum_i(y_i-\bar y_{s(i)})x_i/\sum_i(y_i-\bar y_{s(i)})^2$. At site $s$, $\sum_{i\in s}(y_i-\bar y_s)^2=a_st_s/(a_s+t_s)=h_s$ and $\sum_{i\in s}(y_i-\bar y_s)x_i=h_sD_s$, which gives $\tilde\Delta=H^{-1}\sum_sh_sD_s$. A class-pure site contributes nothing to either sum, and its $D_s$ is not defined, so sums involving $D_s$ run over mixed sites ($a_st_s>0$). At each mixed site $D_s$ has covariance $(1/a_s+1/t_s)\Sigma_\varepsilon=\Sigma_\varepsilon/h_s$, and the $D_s$ are independent, so $\tilde\Delta$ is unbiased with covariance $\Sigma_\varepsilon/H$. If $H=0$ the slope is not defined.
+
+L3 and the exact conditional logistic likelihood are different objectives. For a site with one case and two controls, with score differences $d_1$ and $d_2$, the conditional likelihood contributes $\log(1+e^{-d_1}+e^{-d_2})$ and L3 contributes $\log(1+e^{-d_1})+\log(1+e^{-d_2})=\log(1+e^{-d_1}+e^{-d_2}+e^{-d_1-d_2})$; the two coincide only for strata with one case and one control.
+
+\subsection{Score gaps of linear scorers}
+
+Section~\ref{sec:prop4} summarizes the following result, which was derived after the experiments.
+
+\begin{proposition}[Leakage in score gaps]\label{prop:leak}
+Fix a symmetric $Q\succeq0$ and consider the pooled linear scorer $w=Q(\bar x_A-\bar x_T)$ and the within-site scorer $\tilde w=Q\tilde\Delta$. Score a new case from training site $s$ and a new control from training site $r$, and let $G$ be the score gap (case minus control). Under (A0) and (A1), with new participants whose residuals are independent of the training sample given the shared site effects:
+(a) for the pooled scorer, $\mathbb{E}\,G=\Delta^\top Q\Delta+(c_s-c_r)\operatorname{tr}(Q\Sigma_u)$;
+(b) in the symmetric designs (with $b\le m$ under two-way bridging), a reverse-set pair has $c_s-c_r=-\sqrt{2L/k}$, so $\mathbb{E}\,G_{\mathrm{rev}}=\Delta^\top Q\Delta-\sqrt{2L/k}\,\operatorname{tr}(Q\Sigma_u)$;
+(c) for a same-site pair ($s=r$) the pooled scorer has $\mathbb{E}\,G=\Delta^\top Q\Delta$;
+(d) for the within-site scorer, $\mathbb{E}\,G=\Delta^\top Q\Delta$ for every pair.
+\end{proposition}
+
+\emph{Proof.} Assume (A0) and (A1). New participants share the site effect $u_s$ of their site with the training participants of that site; their residuals $\varepsilon$ are independent of the training sample. By Proposition~\ref{prop:L}, $w=Q\Delta+Q\sum_qc_q(u_q-m_u)+Q\bar e$ with $\bar e=\bar\varepsilon_A-\bar\varepsilon_T$, where $\sum_qc_q=0$ allows centring. A new case from site $s$ and a new control from site $r$ give $x_{\mathrm{case}}-x_{\mathrm{ctrl}}=\Delta+(u_s-m_u)-(u_r-m_u)+\varepsilon_{\mathrm{case}}-\varepsilon_{\mathrm{ctrl}}$. Taking the expectation of $G=w^\top(x_{\mathrm{case}}-x_{\mathrm{ctrl}})$, all cross terms vanish by independence except $\Delta^\top Q\Delta$ and
+\[
+\mathbb{E}\Big[\Big(\sum_qc_q(u_q-m_u)\Big)^{\!\top}Q\big((u_s-m_u)-(u_r-m_u)\big)\Big]=(c_s-c_r)\operatorname{tr}(Q\Sigma_u),
+\]
+which proves (a). Part (b) uses $c_s-c_r=-2\alpha=-\sqrt{2L/k}$ for a case from a control site and a control from a case site; in the two-way design this requires $b\le m$. Part (c) is $s=r$. For (d), $\tilde\Delta=\Delta+H^{-1}\sum_{s:a_st_s>0}h_s(\bar\varepsilon_{sA}-\bar\varepsilon_{sT})$ contains no site term, so only $\Delta^\top Q\Delta$ remains. These are statements about the mean score gap of linear scorers with a fixed $Q$; equal mean gaps do not imply equal AUCs, and the proposition says nothing about the AUC of regularized logistic regression or about how its penalty is selected.
+
+\subsection{Within-site and cross-site targets}
+
+Section~\ref{sec:eval} uses the following result.
+
+\begin{proposition}[Two targets]\label{prop:targets}
+For Gaussian $u$ and $\varepsilon$ and a fixed $w$ with $w^\top\Delta>0$ and $w^\top\Sigma_\varepsilon w>0$,
+\begin{equation}
+\mathrm{AUC}_W=\Phi\!\left(\frac{w^\top\Delta}{\sqrt{2w^\top\Sigma_\varepsilon w}}\right)\ \ge\
+\mathrm{AUC}_B=\Phi\!\left(\frac{w^\top\Delta}{\sqrt{2w^\top(\Sigma_\varepsilon+\Sigma_u)w}}\right),\label{eq:targets}
+\end{equation}
+where $\mathrm{AUC}_W$ ranks a case and a control from the same new site and $\mathrm{AUC}_B$ a case and a control drawn from two independent new sites.
+\end{proposition}
+
+\emph{Proof.} Assume in addition that $u$ and $\varepsilon$ are Gaussian and that $w^\top\Sigma_\varepsilon w>0$. For a case and a control from the same new site, the score difference is Gaussian with mean $w^\top\Delta$ and variance $2w^\top\Sigma_\varepsilon w$, because the site effect cancels; for two independent new sites the variance is $2w^\top(\Sigma_\varepsilon+\Sigma_u)w$. Ties have probability zero, so each AUC equals $\Phi$ of the mean divided by the standard deviation. If $w^\top\Delta>0$, the larger variance gives the smaller AUC.
+
+\subsection{Site-invariant representations under class-pure training}
+
+Suppose every training site is class-pure, $Y=\gamma(S)$, and a representation $Z$ satisfies $P(Z\in A\mid S=s)=R(A)$ for all sites $s$ and measurable sets $A$. Then $P(Z\in A\mid Y=y)=\sum_{s:\gamma_s=y}R(A)P(S=s\mid Y=y)=R(A)$, so $Z$ is independent of $Y$, and any score computed from $Z$ alone has AUC $0.5$ on the training distribution. The argument needs exact marginal invariance, class-pure sites only, and scores that use $Z$ only; training with a finite adversarial weight guarantees none of these. It is a special case of the conflict between marginal alignment and label shift~\cite{zhao2019}.
+
+\subsection{Monte Carlo check}
+
+Table~\ref{tab:mc} compares the formulas with simulations on synthetic data ($d=3$, seed $0$).
+
+\begin{table}[h]
+\centering
+\caption{Monte Carlo check of the formal results on synthetic data.}
+\label{tab:mc}
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+Item & Simulated & Formula\\
+\midrule
+Prop.~\ref{prop:L}, $L$ for $k=2$, $m=20$, $b=5$ two-way & $0.36$ & $0.36$\\
+Prop.~\ref{prop:L}, covariance, largest relative error ($20{,}000$ draws) & $0.009$ & $0$\\
+Cor.~\ref{cor:alloc}, $k=3$, $m=10$, $B\in[0,60]$: $\min L-L_{\mathrm{equal}}$ & $7\times10^{-18}$ & $\ge0$\\
+Prop.~\ref{prop:within}(b), fixed-effects slope against $\sum_sh_sD_s/H$ & $0.162732$ & $0.162732$\\
+Prop.~\ref{prop:leak}(b), reverse-set gap, pooled scorer ($Q=I$, $40{,}000$ draws) & $-0.3668$ & $-0.3665$\\
+Prop.~\ref{prop:leak}(c), same-site gap, pooled scorer & $0.2095$ & $0.21$\\
+Prop.~\ref{prop:leak}(d), reverse-set gap, within-site scorer & $0.2140$ & $0.21$\\
+Prop.~\ref{prop:targets}, $\mathrm{AUC}_W$ / $\mathrm{AUC}_B$ ($400{,}000$ draws) & $0.6303$ / $0.6198$ & $0.6292$ / $0.6201$\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\input{sections/appA_synthetic}
+
+\section{Pre-specified criteria}\label{app:criteria}
+
+Each experiment was specified in writing before it was run, including the cells, the repeats, the primary metric and the criteria that would count as success. Table~\ref{tab:criteria} lists every criterion in the order in which the criteria were fixed, with its outcome, including criteria for methods that are not reported in the main text. Three analyses in the main text were not pre-specified and are labelled as exploratory or post hoc where they appear: the rank correlation between $L$ and the reverse-set AUC over cells that had been inspected before Proposition~\ref{prop:L} was written, the AUC version of the difference-in-differences for KUL\_3, and the comparison of the two settings for the published methods (whose own criteria N1 and N2 were fixed before it was run). Proposition~\ref{prop:leak} was derived after the experiments. In the deep pilot, the learning rate of the autoencoder was lowered from $10^{-3}$ to $10^{-4}$ after the training loss diverged; this change was judged on training losses only.
+
+{\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{>{\raggedright}p{0.19\linewidth}>{\raggedright}p{0.38\linewidth}>{\raggedright}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.13\linewidth}}
+\caption{Pre-specified criteria and outcomes, in the order in which they were fixed. ABIDE-I with CC200 unless stated otherwise; values are means over repeats.}\label{tab:criteria}\\
+\toprule
+Analysis & Criterion & Result & Met\\
+\midrule
+\endfirsthead
+\toprule
+Analysis & Criterion & Result & Met\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Cost of purity & P1: M $-$ P $\ge0.05$ at $k=1$ & $0.057$ & yes\tabularnewline
+ & P2: P higher and cost lower at $k=6$ than at $k=1$ & $+0.017$; $0.057\to0.015$ & yes\tabularnewline
+ & P3: from $n=20$ to $80$ at $k=2$, P gains less than M & $0.034$ vs $0.080$ & yes\tabularnewline
+Evaluation & V1: $E_{\mathrm{subj}}-$ truth $\ge0.10$ at $k=2$ & $+0.365$ & yes\tabularnewline
+ & V2: LSPO closer to truth than $E_{\mathrm{subj}}$ at $k=2,4,6$ & MAE $0.16/0.11/0.09$ vs $0.37/0.27/0.19$ & yes\tabularnewline
+ & M1: LSPO tuning does not lower test AUC and raises reverse-set AUC ($k=2$; $k=4$) & $+0.001/+0.004$; $-0.000/+0.003$ & $k=2$ only\tabularnewline
+ & M2: NAP raises test and reverse-set AUC at $k=2$ and $4$ & $-0.001$, $-0.000$ & no\tabularnewline
+Explicit site and diagnosis correction before LR (C2; not in main text) & R1: two-way $b=5$ recovers $\ge50\%$ of the cost and reverse-set AUC $\ge0.40$ & $84\%$; $0.07$ & no\tabularnewline
+ & R2: C2 $-$ C0 test AUC $>0$ at $b=2$ and $5$ & mixed signs & no\tabularnewline
+ & R3: C2 (one-way, $b=5$, $+10$ subjects) $\ge$ P with $n=80$ ($+80$) & $+0.002$ & yes\tabularnewline
+Same-class control & D1: two-way $b=5$, C0 $-$ S0 $>0$ in test and reverse-set AUC & $+0.044$, $+0.24$ ($k=2$) & yes\tabularnewline
+ & D2: same, one-way & $+0.015$, $+0.10$ & yes\tabularnewline
+Robustness (QC subset, HO, BrainNetCNN) & Q1: M $-$ P $\ge0.03$ at $k=1$, lower cost and higher reverse-set AUC at $k=6$; Q2 as V1/V2; Q3 as D1 & Table~\ref{tab:robust} & yes, all three\tabularnewline
+Within-site model on mixed data (exploratory precursor) & N1: L3 $-$ L0 $\ge+0.01$ with $\ge70\%$ positive repeats & $+0.008$, $78\%$ & no\tabularnewline
+ & N2: $|$L3 $-$ L1$|<0.005$ & $0.006$ & no\tabularnewline
+Within-site estimator (CC200 and HO) & E1: in all four $b=5$ cells, L3 reverse-set AUC $\ge0.50$ and above C0 & $0.59$--$0.65$ & yes\tabularnewline
+ & E2: two-way $b=5$, L3 $-$ C0 test AUC $\ge-0.01$ & $+0.005$ to $+0.009$ & yes\tabularnewline
+Design rules (CC200 and HO) & G1: even minus concentrated allocation $>0$, two-way $k=4$ & $+0.040$, $+0.037$ & yes\tabularnewline
+ & G2: Spearman$(L$, C0 reverse-set AUC$)\le-0.8$ & $-0.997$, $-0.991$ & yes\tabularnewline
+ & G3: ComBat null test, reverse-set AUC in $[0.40,0.60]$ & EB: $0.000$ (4 of 4 groups fail); without EB: 3 of 4 pass & no\tabularnewline
+ & G4: $|$L1 $-$ L3$|<0.005$ in test AUC & $0.003$--$0.004$ & yes\tabularnewline
+ABIDE-II replication & R1--R5 as P1/Q1, V1/V2, D1, E1/E2, G2 & Table~\ref{tab:replication} & R3 not assessable; others yes\tabularnewline
+Group DRO & G0: gradient ERM within $0.01$ of sklearn ERM & $0.001$--$0.003$ & yes\tabularnewline
+ & H1: Group DRO $-$ ERM reverse-set AUC $<0.05$ at $k=2$ and $4$ & $-0.001$, $+0.000$ & yes\tabularnewline
+KUL\_3 (ABIDE-II) & K1: DiD in sensitivity $\ge0.10$ & $+0.59$ & yes\tabularnewline
+Mixed objective, tuned by within-site AUC & W1: reverse-set AUC $\ge$ L3 $-0.02$ in all four $b=5$ cells & $-0.05$ to $-0.18$ & no\tabularnewline
+ & W2: test AUC $\ge\max($C0, L3$)-0.005$ in all four cells & 3 of 4 cells & no\tabularnewline
+ & W3: tuning by subject folds lowers reverse-set AUC by $\ge0.05$ & $0.146$ & yes\tabularnewline
+Deep pilot ($k=2$, $b=5$ two-way, repeats $0$--$9$; selects the candidate for Section~\ref{app:deep}) & T1: reverse-set AUC $\ge0.55$ and test AUC $\ge$ deep ERM $-0.01$, for each of three candidates & encoder on training data, L3 head: $0.49$; encoder on training and external data, L3 head: $0.59$; end-to-end pair loss: $0.49$ & second candidate only\tabularnewline
+ & T2: for a candidate meeting T1, L3 head $-$ logistic head reverse-set AUC $\ge0.10$ & $+0.28$ & yes\tabularnewline
+Deep within-site head (Section~\ref{app:deep}) & D1: E-L3 $-$ E-CE reverse-set AUC $\ge0.10$ in each cell; test difference $\ge-0.01$ & $0.07$--$0.24$ (one cell $<0.10$); $+0.000$ & no\tabularnewline
+ & D2: E-L3 reverse-set AUC $\ge0.55$ and $\ge$ best deep baseline; test $\ge$ D-ERM $-0.01$ & $0.59$ vs $0.39$; $+0.004$ & yes\tabularnewline
+ADHD-200 & H1: WashU DiD $\ge0.10$ & $+0.30$ & yes\tabularnewline
+ & R1: M $-$ P $\ge0.03$ & $0.008$ & no\tabularnewline
+ & R2: $E_{\mathrm{subj}}-$ truth $\ge0.10$ & $+0.46$ & yes\tabularnewline
+ & R3: C0 $-$ S0 $>0$ in test and reverse-set AUC & $+0.013$, $+0.076$ & yes\tabularnewline
+ & R4: L3 reverse-set AUC $\ge0.50$, above C0; test $\ge-0.01$ & $0.56$, $0.52$ & yes\tabularnewline
+ & R1 trend, LSPO, R5 & only $k=1$ & not assessable\tabularnewline
+One-class models & O-a: O1 reverse-set AUC $<0.5$ in B0 & $0.52$ & no\tabularnewline
+ & O-b: O3 reverse-set AUC $\ge0.5$ and above O1, one-way $b=5$ & $0.25$ vs $0.50$ & no\tabularnewline
+ & O3-eq: reverse-set AUC $\ge0.45$ in all four cells & $0.50$--$0.54$ & yes\tabularnewline
+Same institution & S-a: P\_same reverse-set AUC above P\_cross & $0.55$ vs $0.20$ & yes\tabularnewline
+Published methods (per method) & G1: B0 reverse-set AUC $<0.5$ at $k=2$ and $4$ & $k=4$: $0.52$--$0.58$ & no (all)\tabularnewline
+ & G2: $E_{\mathrm{subj}}-$ truth $\ge0.10$ & Parisot $+0.41$, $+0.40$; MIDA $-0.27$ & Parisot only\tabularnewline
+ & G3: C0 $-$ B0 reverse-set AUC $>0$ at $k=2$ and $4$ & $+0.05$ to $+0.58$ & yes (all)\tabularnewline
+ & N1 (post hoc): MIDA without reverse set, B0 reverse-set AUC $<0.5$ & $0.35$, $0.40$ & yes\tabularnewline
+ & N2 (post hoc): graph network without reverse set, B0 $k=4$ & $0.22$ & yes\tabularnewline
+\end{longtable}
+}
+

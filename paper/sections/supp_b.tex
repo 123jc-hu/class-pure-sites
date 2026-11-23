@@ -1,0 +1,93 @@
+\section{Deep within-site objectives}\label{app:deep}
+
+We asked whether the within-site principle carries over to a deep representation, and how it compares with deep domain generalization. All deep models used the BrainNetCNN backbone~\cite{kawahara2017} of the robustness check.
+
+\emph{Frozen encoder with linear heads.} A denoising autoencoder ($20\%$ symmetric masking, Adam with learning rate $10^{-4}$, weight decay $5\times10^{-4}$, batch size $14$, $100$ epochs) was trained on an unlabeled pool made of the training participants, without their labels, and all ABIDE-I participants at sites that were neither training nor test sites of the repeat; input standardization was fitted on the same pool. Test-site participants and the reverse set never entered it. Three linear heads were fitted on the frozen embedding of the training participants: logistic regression (E-CE), linear Group DRO with one group per site (E-GDRO), and L3 (E-L3).
+
+\emph{End-to-end baselines.} From random initialization, with the settings of the robustness check (SGD, learning rate $10^{-4}$, momentum $0.9$, weight decay $5\times10^{-4}$, batch size $14$, $50$ epochs, no tuning): ERM (D-ERM), online Group DRO with one group per site (D-GDRO), and a multi-source domain-adversarial network~\cite{ganin2016} (D-DANN) with a site discriminator behind a gradient-reversal layer, which also saw the same unlabeled pool. In timing runs, the D-DANN loss diverged because the encoder could enlarge its unnormalized features without bound; before the formal runs, and judged on training losses only, we normalized the discriminator input with a layer normalization without affine parameters.
+
+The four cells were $k\in\{2,4\}$, $b=5$, one-way and two-way, with $50$ repeats; in the $k=2$ two-way cell, repeats $0$--$9$ had been used in a pilot and only repeats $10$--$49$ were used for the criteria. Table~\ref{tab:deep} shows the results. With the same embedding, the L3 head kept the reverse-set AUC at $0.58$--$0.60$, against $0.34$--$0.51$ for the logistic head, at similar test AUC. Criterion D1 was not met because the difference in the $k=4$ two-way cell was $0.07$, below the threshold of $0.10$. The end-to-end baselines had reverse-set AUCs of $0.22$--$0.51$. In this D-DANN configuration, the site remained linearly decodable from the representation. After the final epoch, a logistic regression on the raw $128$-dimensional layer, with five folds stratified by site within the training and external pool, identified the site with an accuracy of $0.69$--$0.91$ (chance $0.08$; all $50$ repeats per cell), against $0.42$--$0.48$ for ERM. This probe measures decodability within a pool the encoder had seen, not transfer to unseen sites. The discriminator of D-DANN, whose accuracy during the last epoch was near $0$, read the layer-normalized representation, so the two accuracies are not directly comparable. All deep models stayed below the linear models in test AUC ($0.55$--$0.58$ against $0.58$--$0.63$).
+
+\begin{table}[h]
+\centering
+\caption{Deep models (ABIDE-I, CC200, $b=5$). Within-site test AUC / reverse-set AUC, means over repeats ($40$ for $k=2$ two-way, $50$ otherwise). Linear C0 and L3 are the models of the main text.}
+\label{tab:deep}
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & $k=2$, one-way & $k=2$, two-way & $k=4$, one-way & $k=4$, two-way\\
+\midrule
+E-CE (frozen encoder) & $0.567$ / $0.341$ & $0.579$ / $0.406$ & $0.570$ / $0.471$ & $0.573$ / $0.513$\\
+E-GDRO (frozen encoder) & $0.564$ / $0.358$ & $0.576$ / $0.400$ & $0.569$ / $0.497$ & $0.573$ / $0.515$\\
+E-L3 (frozen encoder) & $0.554$ / $0.577$ & $0.584$ / $0.598$ & $0.569$ / $0.592$ & $0.583$ / $0.586$\\
+D-ERM & $0.554$ / $0.268$ & $0.574$ / $0.354$ & $0.568$ / $0.407$ & $0.577$ / $0.513$\\
+D-GDRO & $0.554$ / $0.267$ & $0.573$ / $0.355$ & $0.567$ / $0.405$ & $0.576$ / $0.513$\\
+D-DANN & $0.554$ / $0.218$ & $0.565$ / $0.300$ & $0.563$ / $0.379$ & $0.571$ / $0.492$\\
+\midrule
+Linear C0 & $0.596$ / $0.199$ & $0.616$ / $0.315$ & $0.607$ / $0.388$ & $0.623$ / $0.524$\\
+Linear L3 & $0.582$ / $0.603$ & $0.619$ / $0.642$ & $0.604$ / $0.622$ & $0.632$ / $0.647$\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\section{Robustness, statistical tests and further details}\label{app:robust}
+
+\subsection{Robustness variants}
+
+Table~\ref{tab:robust} gives the three pre-specified robustness criteria for the three ABIDE-I variants. The BrainNetCNN cost at $k=1$ only just exceeded its threshold of $0.03$, and the bridging comparison rested on $5$ to $16$ repeats in which both designs were feasible.
+
+\begin{table}[h]
+\centering
+\caption{Robustness variants of ABIDE-I. Q1: cost of purity M $-$ P at $k=1$ and $k=6$, and reverse-set AUC of P at $k=1$ and $k=6$. Q2: $E_{\mathrm{subj}}-$ truth at $k=2$, and mean absolute error of $E_{\mathrm{subj}}$ and LSPO at $k=2$. Q3: C0 $-$ S0 in test and reverse-set AUC, two-way $b=5$, $k=2$, with the number of feasible repeats.}
+\label{tab:robust}
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+ & QC subset ($n=873$) & Harvard-Oxford & BrainNetCNN\\
+\midrule
+Q1 cost, $k=1\to6$ & $0.073\to0.018$ & $0.064\to0.016$ & $0.032\to0.020$\\
+Q1 reverse-set AUC, $k=1\to6$ & $0.02\to0.34$ & $0.03\to0.37$ & $0.11\to0.37$\\
+Q2 bias of $E_{\mathrm{subj}}$ & $+0.37$ & $+0.38$ & $+0.35$\\
+Q2 MAE, $E_{\mathrm{subj}}$ / LSPO & $0.37$ / $0.14$ & $0.38$ / $0.15$ & $0.35$ / $0.14$\\
+Q3 test / reverse-set difference & $+0.012$ / $+0.18$ (15) & $+0.031$ / $+0.22$ (16) & $+0.035$ / $+0.16$ (5)\\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{ComBat null test}
+
+Before ComBat was applied to the bridged designs, we ran it on pure noise with the dimensions of each atlas: standard normal features plus one $N(0,1)$ shift vector per site, no diagnostic effect, $k=2$, $b=5$, one-way and two-way, five repeats each. The pre-specified requirement was a mean reverse-set AUC within $[0.40,0.60]$. With empirical Bayes, ComBat gave $0.000$ in all four groups. Empirical Bayes shrinks each site's location estimate towards a common prior, so a fraction of each site shift remains after harmonization; in an unbalanced design this remainder is correlated with the class, and across thousands of features a linear classifier exploits it. In a small simulation, exact removal of site means and ComBat without empirical Bayes both gave about $0.5$. Without empirical Bayes, three of the four groups passed ($0.53$, $0.41$, $0.44$; Harvard-Oxford two-way $0.34$). We therefore report only the test AUC of ComBat, which was within $0.01$ of C0 for both versions in all four $b=5$ cells and both atlases.
+
+\subsection{Corrected resampled tests}
+
+Table~\ref{tab:tests} lists all $82$ corrected resampled $t$-tests~\cite{nadeau2003}, grouped into the six families within which Holm correction was applied. For each paired contrast it gives the mean difference over the $J$ repeats, the number of repeats with a positive difference ($n_{>0}$), and the two-sided $p$-values before and after Holm correction. One test remains below $0.05$ after correction. As explained in Section~\ref{sec:metrics}, the correction is an approximation in this design; the counts of positive repeats describe stability across overlapping splits and are not independent trials. Cells: $k$, $b$, one-way (1w) or two-way (2w).
+
+{\footnotesize\setlength{\tabcolsep}{2.5pt}
+\input{tables/tests_en}
+}
+
+\subsection{Published multi-site methods}
+
+Table~\ref{tab:published} gives all results of the two published methods. In the original transductive setting the reverse set entered training without labels; in the second setting it was kept out and scored after training. The mixed design M has no reverse set, so it was run once. Subject-level cross-validation uses class-pure training data only and is the same for both settings. The graph network with the CC200 atlas was run in the transductive setting only.
+
+\begin{table}[h]
+\centering
+\caption{Published multi-site methods on ABIDE-I ($n=40$, $50$ repeats). Within-site test AUC and reverse-set AUC for $k=2$ / $k=4$; $E_{\mathrm{subj}}$: subject-level five-fold cross-validation of B0 at $k=2$. Trans.: original transductive setting; out: reverse set kept out of training.}
+\label{tab:published}
+\small\setlength{\tabcolsep}{3.5pt}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+Method & Setting & B0 test & B0 reverse & C0 test & C0 reverse & M test & $E_{\mathrm{subj}}$\\
+\midrule
+Logistic regression & inductive & $.575$ / $.581$ & $.120$ / $.269$ & $.614$ / $.623$ & $.301$ / $.524$ & $.627$ / $.609$ & $.940$\\
+Graph network, HO & trans. & $.589$ / $.634$ & $.107$ / $.543$ & $.620$ / $.642$ & $.608$ / $.619$ & $.604$ / $.605$ & $1.000$\\
+Graph network, HO & out & $.559$ / $.591$ & $.017$ / $.222$ & $.599$ / $.630$ & $.306$ / $.557$ & & \\
+Graph network, CC200 & trans. & $.598$ / $.627$ & $.070$ / $.524$ & $.643$ / $.641$ & $.646$ / $.638$ & $.618$ / $.605$ & $1.000$\\
+MIDA pipeline & trans. & $.625$ / $.642$ & $.544$ / $.576$ & $.643$ / $.648$ & $.596$ / $.622$ & $.612$ / $.611$ & $.352$\\
+MIDA pipeline & out & $.519$ / $.527$ & $.347$ / $.404$ & $.598$ / $.625$ & $.429$ / $.582$ & & \\
+\bottomrule
+\end{tabular}}
+\end{table}

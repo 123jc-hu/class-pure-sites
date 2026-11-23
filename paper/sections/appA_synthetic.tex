@@ -1,0 +1,20 @@
+% Moved from Section 3 to save main-text pages (appendices are not counted by PR).
+\subsection{A synthetic illustration of Proposition~\ref{prop:leak}}\label{sec:synthetic}
+
+Table~\ref{tab:synthetic} evaluates Proposition~\ref{prop:leak}(b) for the plug-in scorer ($Q=I$) in a three-dimensional example with $\|\Delta\|^2=0.21$ and $\operatorname{tr}\Sigma_u=0.96$, using the design of our ABIDE-I experiments ($k=2$, $m=20$). Without bridges, the expected reverse-set gap is $-0.75$, more than three times the size of the true signal and of opposite sign. Two-way bridging with $b=5$ shrinks it to $-0.37$ and with $b=10$ to $-0.11$; one-way bridging with the same number of bridges per site removes less. A Monte Carlo check with $40{,}000$ replicates of the two-way $b=5$ design gives $-0.367$ for the pooled scorer (formula $-0.366$), $+0.214$ for the within-site scorer (formula $+0.21$), and $+0.210$ for a same-site pair scored by the pooled scorer.
+
+\begin{table}[t]
+\centering
+\caption{Expected reverse-set score gap $\mathbb{E}\,G_{\mathrm{rev}}$ of the pooled plug-in scorer in the synthetic example ($k=2$, $m=20$, $\|\Delta\|^2=0.21$). The within-site scorer has $\mathbb{E}\,G=0.21$ in every design that contains bridges.}
+\label{tab:synthetic}
+\begin{tabular}{lcccc}
+\toprule
+& $b=0$ & $b=2$ & $b=5$ & $b=10$\\
+\midrule
+One-way: $L$ & 1.000 & 0.826 & 0.640 & 0.444\\
+One-way: $\mathbb{E}\,G_{\mathrm{rev}}$ & $-0.751$ & $-0.663$ & $-0.559$ & $-0.431$\\
+Two-way: $L$ & 1.000 & 0.669 & 0.360 & 0.111\\
+Two-way: $\mathbb{E}\,G_{\mathrm{rev}}$ & $-0.751$ & $-0.576$ & $-0.366$ & $-0.110$\\
+\bottomrule
+\end{tabular}
+\end{table}

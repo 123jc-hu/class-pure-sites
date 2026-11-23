@@ -1,0 +1,80 @@
+% Section 3 -- Problem setting and theory. Full proofs: Supplementary Section S1 (sections/supp_a.tex).
+\section{Problem setting and theory}\label{sec:theory}
+
+With a deliberately simple model, in which each site adds the same shift to the features of all its participants, we ask whether class-pure data determine the diagnostic effect at all (Section~\ref{sec:prop1}), how much a given mix of sites and diagnoses helps (Section~\ref{sec:prop2}), and which comparisons are free of site effects (Section~\ref{sec:prop3}). Section~\ref{sec:prop4} relates the answers to the scores of trained models. Proofs, two further propositions, boundary cases and a Monte Carlo check are in Supplementary Section~\ref{app:proofs}.
+
+\subsection{Class-pure sites, designs and targets}\label{sec:setting}
+
+We observe participants $i$ at sites $s\in\{1,\dots,S\}$. Each participant has a feature vector $x_i\in\mathbb{R}^d$, here the edges of a functional connectivity matrix, and a diagnosis $y_i\in\{0,1\}$, with $1$ for a case. The training \emph{design} is the table of how many cases $a_s$ and controls $t_s$ each site contributes, with totals $N_A=\sum_s a_s$ and $N_T=\sum_s t_s$. A site is \emph{class-pure} if it contributes only one class, that is, if $a_st_s=0$. We study training sets in which each class comes from $k$ class-pure sites with $m$ participants each, so that each class has $n=km$ participants. Such a set can be augmented with \emph{bridging subjects}: $b$ participants of the other class, recruited at the same site and processed through the same acquisition pipeline. \emph{One-way} bridging adds controls only to the case sites; \emph{two-way} bridging adds the missing class at every site (Fig.~\ref{fig:overview}).
+
+Throughout, we use the additive model
+\begin{equation}
+x_i=\mu+\Delta\,y_i+u_{s(i)}+\varepsilon_i ,\label{eq:model}
+\end{equation}
+where $\mu$ is the overall mean, $\Delta$ is the average difference between cases and controls, $u_s$ is the shift added by site $s$, and $\varepsilon_i$ is individual variation. The $\varepsilon_i$ are i.i.d.\ with mean $0$ and covariance $\Sigma_\varepsilon$, independent of the site effects and of the design. The results below need different subsets of two assumptions.
+\begin{itemize}
+\item[(A0)] \emph{Additivity}: the site effect is the same for both classes within a site (no site-by-diagnosis interaction).
+\item[(A1)] \emph{Exchangeable site effects}: the $u_s$ are i.i.d.\ with mean $m_u$ and covariance $\Sigma_u$, independently of which class a site contributes. Mean statements need only the weaker (A1$'$): $\mathbb{E}[u_s]$ does not depend on the class a site contributes.
+\end{itemize}
+In words, (A0) says that a scanner changes the features of cases and controls in the same way, and (A1) says that case sites are not systematically different from control sites. (A1$'$) fails when case sites and control sites recruit systematically different populations, and such sampling differences can be as large as disorder effects~\cite{yamashita2019}. When no site holds both classes, neither assumption can be checked from the data.
+
+What a clinic needs is a score $f$ that ranks a case above a control \emph{at a new site}, measured by the within-site AUC, $\mathrm{AUC}_W$. To detect site shortcuts we also use the \emph{reverse set}: held-back participants at the training sites whose diagnosis is opposite to the class that their site contributed in training. A model that ranks by site puts them in the wrong order, so a reverse-set AUC far below $0.5$ signals a site shortcut. Parker and Leek used the same contrast with two genomic batches~\cite{parker2012}.
+
+\subsection{Class-pure training is not identifiable}\label{sec:prop1}
+
+If hospital A contributes only cases with a feature mean of $2$ and hospital B only controls with a mean of $0$, the difference may be a disease effect, a hospital effect or any mix of the two; more participants measure the two means more precisely but do not tell these explanations apart. Proposition~\ref{prop:pure} states this in general and gives the error that remains under (A1).
+
+\begin{proposition}[Class-pure sites]\label{prop:pure}
+Suppose every training site is class-pure.
+(a) If the site effects are unrestricted, $(\Delta,\{u_s\})$ and $(\Delta+\delta,\{u_s-\delta\,\gamma_s\})$, where $\gamma_s$ is the class of site $s$, generate the same distribution of the training data for every $\delta\in\mathbb{R}^d$; hence any estimator $T$ satisfies $\max\{\mathbb{E}\|T-\Delta\|^2,\mathbb{E}\|T-\Delta-\delta\|^2\}\ge\|\delta\|^2/4$.
+(b) Under (A1), with $k$ sites of $m$ subjects per class, the difference of the two class means $\hat\Delta$ is unbiased and
+\begin{equation}
+\operatorname{Cov}(\hat\Delta)=\frac{2}{k}\Sigma_u+\frac{2}{km}\Sigma_\varepsilon .\label{eq:pure-cov}
+\end{equation}
+\end{proposition}
+Part~(a) holds because $\Delta\gamma_s$ and $u_s$ enter the data only through their sum; it is the multi-site form of the observation that completely confounded batch designs admit no correction~\cite{song2020}. The site term in Eq.~\eqref{eq:pure-cov} does not shrink as $m$ grows: adding subjects to class-pure sites cannot substitute for adding sites.
+
+\subsection{The design coefficient}\label{sec:prop2}
+
+For any design define
+\begin{equation}
+c_s=\frac{a_s}{N_A}-\frac{t_s}{N_T},\qquad L=\sum_s c_s^2 .\label{eq:L}
+\end{equation}
+
+Here $c_s$ is the share of all training cases that site $s$ contributes minus its share of all training controls. $L$ is not a loss or a probability. The next result shows that $L$ is exactly the weight with which site effects enter the difference between the class means.
+
+\begin{proposition}[Design coefficient]\label{prop:L}
+Under (A0), $\bar x_A-\bar x_T=\Delta+\sum_s c_su_s+(\bar\varepsilon_A-\bar\varepsilon_T)$. Under (A1) this contrast is unbiased and
+\begin{equation}
+\operatorname{Cov}(\bar x_A-\bar x_T)=L\,\Sigma_u+\Big(\frac1{N_A}+\frac1{N_T}\Big)\Sigma_\varepsilon .\label{eq:L-cov}
+\end{equation}
+$L=0$ if and only if all non-empty sites have the same case fraction; a 1:1 ratio is not required. For the symmetric designs,
+\begin{equation}
+L_{\mathrm{pure}}=\frac2k,\qquad
+L_{\mathrm{one}}=\frac2k\Big(\frac{m}{m+b}\Big)^2,\qquad
+L_{\mathrm{two}}=\frac2k\Big(\frac{m-b}{m+b}\Big)^2 .\label{eq:L-special}
+\end{equation}
+\end{proposition}
+
+$L$ depends only on the design table, so it can be computed before any data are collected. For $k=2$ and $m=20$, five two-way bridges per site reduce $L$ from $1$ to $0.36$, which in the site-variance term equals the effect of increasing $k$ from $2$ to about $5.6$ ($k_{\mathrm{eff}}=2/L$). The next result says how to spend a bridging budget.
+
+\begin{corollary}[Allocation]\label{cor:alloc}
+Let $U$ controls be added to the case sites and $V$ cases to the control sites. Over real-valued allocations: (i) for fixed $U$ and $V$, $L$ is minimized by spreading each budget evenly over the sites of its side. (ii) if the total budget $B=U+V$ may be split between the sides and $B\le 2km$, $L$ is minimized by $U=V=B/2$, i.e.\ $B/(2k)$ bridges per site. The condition $B\le 2km$ cannot be dropped: for $k=1$, $m=2$, $B=5$, the split $(4,1)$ gives $L=0$ while the even split gives $L>0$.
+\end{corollary}
+
+\subsection{Within-site contrasts remove the site term}\label{sec:prop3}
+
+Bridging reduces the site term but leaves part of it when $L>0$. A case and a control from the same site carry the same site shift $u_s$, so their difference contains no site effect.
+
+\begin{proposition}[Within-site contrasts]\label{prop:within}
+(a) Under (A0), for a case $a$ and a control $t$ at the same site, $x_a-x_t=\Delta+\varepsilon_a-\varepsilon_t$. Any deterministic procedure that uses only such within-site differences, with a fixed penalty and tuning rule, is invariant to arbitrary site shifts $u_s\mapsto u_s+\eta_s$.
+(b) Let $h_s=a_st_s/(a_s+t_s)$, $H=\sum_sh_s$, and, at each site with $a_st_s>0$, $D_s=\bar x_{sA}-\bar x_{sT}$; suppose $H>0$, and let sums involving $D_s$ run over these sites. The least-squares slope of $x$ on $y$ with site fixed effects equals $\tilde\Delta=H^{-1}\sum_sh_sD_s$, which is unbiased with covariance $\Sigma_\varepsilon/H$.
+\end{proposition}
+
+Class-pure sites carry no weight, and the effective sample size is $H$, which is smaller than the number of within-site pairs. Three limits apply. Additivity does not imply a common linear logit (a common Gaussian within-class covariance suffices), so bridging subjects must pass through the same acquisition pipeline as the site's original class. Invariance holds in fixed feature coordinates; a global standardization fitted on the training set depends on the site composition, so the implemented pipeline is invariant only approximately. Within-site training does not remove the site constant from the scores, so pooled cross-site AUC, thresholds and calibration are still affected.
+
+Another approach is to make the representation independent of the site, but on class-pure data this also removes the diagnostic information. If $Y=\gamma(S)$ and $P(Z\mid S=s)$ is the same for all sites, then $Z\perp Y$, and any score computed from $Z$ alone has AUC $0.5$ on the training distribution~\cite{zhao2019}; methods with a finite invariance penalty do not reach this limit, so their effect is an empirical question (Section~\ref{sec:res-pureonly}). Class-conditional alignment, $Z\perp S\mid Y$~\cite{zhao2020cfnet}, constrains only the differences among sites of the same class and leaves the difference between the average case site and the average control site, which is confounded with $\Delta$, unchanged.
+
+\subsection{From the design to the scores}\label{sec:prop4}
+
+To see how the site term reaches the predictions, consider a simplified linear scorer whose weight vector is a fixed matrix $Q$ times the estimated diagnostic direction, and the score gap $G$ of a new case from training site $s$ minus a new control from training site $r$. Proposition~\ref{prop:leak} in the Supplementary Material, which we derived after the experiments to explain their pattern, shows under (A0) and (A1), for new participants whose residuals are independent of the training sample given the shared site effects, that the pooled scorer has $\mathbb{E}\,G=\Delta^\top Q\Delta+(c_s-c_r)\operatorname{tr}(Q\Sigma_u)$. In the symmetric designs (with $b\le m$ under two-way bridging), a reverse-set pair has $c_s-c_r=-\sqrt{2L/k}$, so the expected shortcut term grows with $\sqrt{L}$; Section~\ref{sec:res-bridge} tests the corresponding relation between $L$ and the reverse-set AUC. For a same-site pair the site term vanishes: a score offset shared by all participants of a site cancels, so within-site ranking cannot identify such offsets of a fixed model, although the site term can still change the learned direction. The within-site scorer $Q\tilde\Delta$ has $\mathbb{E}\,G=\Delta^\top Q\Delta$ for every pair. In a synthetic example matching our ABIDE-I design, the expected reverse-set gap is $-0.75$ without bridges, $-0.37$ with two-way bridging at $b=5$, and $+0.21$ for the within-site scorer (Supplementary Section~\ref{sec:synthetic}). These statements concern mean score gaps of linear scorers with a fixed $Q$; equal mean gaps do not imply equal AUCs, and they give no guarantee for the AUC of regularized logistic regression or for how its penalty is selected.

@@ -1,0 +1,48 @@
+% Section 4 -- Framework: evaluation, design, estimation (condensed 2026-11-23).
+\section{A site-level framework}\label{sec:framework}
+
+When sites are class-pure, independent evidence comes from sites: more subjects at a site only estimate that site's mean more precisely (Proposition~\ref{prop:pure}). The framework turns this into three rules, all of which work with standard models.
+
+\subsection{Evaluation}\label{sec:eval}
+
+\begin{table}[tbp]
+\centering
+\caption{The four AUCs used in this paper. All use the same scoring direction: a higher score means more case-like, and each AUC is the fraction of case and control pairs in which the case receives the higher score. An AUC of $0.12$ is therefore not an accuracy of $12\%$: it means that the control scored higher than the case in $88\%$ of the pairs.}
+\label{tab:aucs}
+\makebox[\linewidth][c]{\begin{minipage}{15cm}\centering
+\begin{tabular}{>{\raggedright}p{0.2\linewidth}>{\raggedright}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.32\linewidth}}
+\toprule
+AUC & Which cases are compared with which controls & Question it answers\\
+\midrule
+Subject-level cross-validation & Participants held out from the training sites; the case and control of a pair usually come from different training sites & How good does the model look on the sites it was trained on?\\
+LSPO & Participants of one held-out case site against those of one held-out control site & Does the ranking carry over to sites that were not used for training?\\
+Within-site AUC on new sites (main metric) & Cases and controls from the same new mixed site, averaged over test sites & Can the model separate the classes when site gives no advantage?\\
+Reverse-set AUC (stress test) & Cases held out at control sites against controls held out at case sites & Does the model follow the site when the training link between site and diagnosis is reversed?\\
+\bottomrule
+\end{tabular}
+\end{minipage}}
+\end{table}
+
+Table~\ref{tab:aucs} summarizes the four AUCs. The within-site AUC measures diagnostic ranking but cannot reveal by itself whether scores are shifted between sites; the reverse set is added for that purpose.
+
+\paragraph{Do not use subject-level cross-validation} When folds are drawn over subjects, every test subject shares its site with training subjects of the same class, so a site shortcut is rewarded like a diagnostic signal. By Proposition~\ref{prop:pure} it persists as $m$ grows.
+
+\paragraph{Leave-site-pair-out (LSPO)} Each fold holds out one case site and one control site, trains on the remaining $k-1$ sites of each class and computes the AUC on the two held-out sites; the estimate is the mean over all $k^2$ pairs, so it requires $k\ge2$. Subject-level cross-validation is averaged over folds in the same way, because pooling scores from different models can bias the AUC in small samples~\cite{airola2011}. LSPO never shares a site between training and test, but it measures ranking across sites: for Gaussian site effects and residuals and a fixed $w$ with $w^\top\Delta>0$ and $w^\top\Sigma_\varepsilon w>0$, a case and a control from two independent new sites are ordered correctly less often than a pair from the same new site, $\mathrm{AUC}_B\le\mathrm{AUC}_W$, because the site variance enters the comparison (Proposition~\ref{prop:targets} in the Supplementary Material). LSPO also trains on one site pair fewer than the final model, so we report its empirical bias and spread.
+
+\paragraph{Reverse-set AUC as a stress test} The reverse set (Section~\ref{sec:setting}) asks whether a model ranks by site. In a truly class-pure collection it has to be recruited, for example by holding back some bridging subjects. An AUC well below $0.5$ means that the model ranks by site or has learned the diagnostic direction backwards; an AUC at or above $0.5$ does not prove that it ignores sites, because a strong diagnostic signal can mask a site offset. Designs that remove participants from the reverse set must be compared on the participants common to both.
+
+\subsection{Design}\label{sec:design}
+
+\paragraph{Compute $L$ before collecting data} The design coefficient (Eq.~\ref{eq:L}) depends only on the table of participants per site and class, so recruitment plans can be compared on paper through $L/L_{\mathrm{pure}}$ and the equivalent number of sites $2/L$.
+
+\paragraph{Bridge across classes, in both directions, evenly} By Corollary~\ref{cor:alloc}, a fixed budget is best spread evenly over the sites and, for budgets $B\le2km$, split evenly between case and control sites. Bridges must be recruited like the site's original participants: controls from a different population scanned on the same machine differ by more than the site shift, which violates (A0).
+
+\subsection{Estimation}\label{sec:estimation}
+
+\paragraph{Within-site pairwise logistic loss (L3)} Proposition~\ref{prop:within} suggests training only on differences between a case and a control from the same site. L3 compares such pairs and penalizes the model when the case receives the lower score. Pairing is used only during training; at test time each participant is scored individually. Let $\mathcal{P}=\{(a,t): s(a)=s(t),\ y_a=1,\ y_t=0\}$ be the within-site case-control pairs, $N_{\mathrm{pair}}=|\mathcal{P}|$, and $z$ the standardized features. L3 fits $f(x)=w^\top z$ without intercept by minimizing
+\begin{equation}
+\frac1{N_{\mathrm{pair}}}\sum_{(a,t)\in\mathcal{P}}\log\!\big(1+e^{-w^\top(z_a-z_t)}\big)+\frac{\|w\|^2}{2CN},\label{eq:L3}
+\end{equation}
+where $N$ is the number of training subjects, so that $C$ has the same scale as in standard logistic regression. Class-pure sites contribute no pairs, and the site shift cancels in every difference $z_a-z_t$. L3 coincides with the exact conditional logistic likelihood~\cite{avalos2015} only when every stratum holds one case and one control.
+
+\paragraph{Tuning} $C$ is selected by the within-site pair AUC in an inner cross-validation on the training subjects, with $\min(5,b)$ folds stratified by site and diagnosis. Because this criterion cancels the site-specific score offsets of a fixed model, it does not guarantee tuning free of the shortcut; what guards against the shortcut is the structure of Eq.~\eqref{eq:L3} itself, which the selection rule cannot provide.

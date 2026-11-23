@@ -1,0 +1,11 @@
+# Versions used for all results (Python 3.12.12)
+numpy==2.4.2
+pandas==3.0.1
+scipy==1.17.1
+scikit-learn==1.8.0
+matplotlib==3.10.8
+torch==2.10.0
+nilearn==0.14.1
+nibabel==5.5.0
+neuroCombat==0.2.12
+pytest==9.1.1

@@ -1,0 +1,31 @@
+% Supplementary Material of Paper A (separate file; not counted in the main-text page limit).
+% Cross-references to the main text use xr: compile main.tex first, then this file, then main.tex again.
+\documentclass[11pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{times}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,array,longtable}
+\newcommand{\widefig}[1]{\makebox[\linewidth][c]{\includegraphics[width=16cm]{#1}}}
+\usepackage{xr-hyper}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\externaldocument{build/main}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\newtheorem{proposition}{Proposition}
+\renewcommand{\theproposition}{S\arabic{proposition}}
+\renewcommand{\theequation}{S\arabic{equation}}
+\title{Supplementary Material}
+\date{}
+\pdfsuppressptexinfo=-1% do not copy the producer metadata of included figure files
+\begin{document}
+\maketitle
+\noindent Section, figure and table numbers without the prefix S refer to the main text.
+
+\input{sections/supp_a}
+\input{sections/supp_results}
+\input{sections/supp_b}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+\end{document}

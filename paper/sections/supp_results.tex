@@ -1,0 +1,150 @@
+% Supplementary Section S3 -- additional results and method details moved from the main text (2026-11-23).
+\section{Additional results}\label{app:more}
+
+Unless stated otherwise, results are for ABIDE-I with the CC200 atlas, as means over $50$ repeats.
+
+\subsection{Main designs and methods}
+
+\begin{table}[h]
+\centering
+\caption{Training data and training objective of the main designs and methods, for $k=2$, $m=20$ and $b=5$ (cases/controls contributed by each training site). Sites 1 and 2 are the case sites and sites 3 and 4 the control sites of the class-pure design. Pooled LR: $\ell_2$-penalized logistic regression on all training participants.}
+\label{tab:designs}
+\setlength{\tabcolsep}{3pt}
+\makebox[\linewidth][c]{\begin{minipage}{15cm}\centering
+\begin{tabular}{>{\raggedright}p{0.3\linewidth}cccccl}
+\toprule
+Name & Site 1 & Site 2 & Site 3 & Site 4 & Total & Objective\\
+\midrule
+B0, class-pure pooled LR (design P) & 20/0 & 20/0 & 0/20 & 0/20 & 80 & pooled LR\\
+M, mixed-site pooled LR & 10/10 & 10/10 & 10/10 & 10/10 & 80 & pooled LR\\
+S0, same-class additions & 25/0 & 25/0 & 0/25 & 0/25 & 100 & pooled LR\\
+C0, bridged pooled LR & 20/5 & 20/5 & 5/20 & 5/20 & 100 & pooled LR\\
+L3, bridged within-site LR & 20/5 & 20/5 & 5/20 & 5/20 & 100 & within-site pairs\\
+\bottomrule
+\end{tabular}
+\end{minipage}}
+\end{table}
+
+\subsection{Results by number of sites}
+
+Table~\ref{tab:kcurve} gives the numbers behind Figs.~\ref{fig:problem} and~\ref{fig:evaluation}a--c.
+
+\begin{table}[h]
+\centering
+\caption{ABIDE-I, CC200, $n=40$ per class. Within-site AUC on held-out test sites for the pure (P) and mixed (M) designs, reverse-set AUC of P, and two estimates of the within-site AUC of P computed from the training data: subject-level five-fold cross-validation ($E_{\mathrm{subj}}$) and leave-site-pair-out ($E_{\mathrm{LSPO}}$). MAE: mean absolute error against the test-site value across repeats.}
+\label{tab:kcurve}
+\begin{tabular}{lcccc}
+\toprule
+& $k=1$ & $k=2$ & $k=4$ & $k=6$\\
+\midrule
+P, within-site AUC & 0.578 & 0.575 & 0.581 & 0.596\\
+M, within-site AUC & 0.636 & 0.627 & 0.609 & 0.611\\
+Cost M$-$P & 0.057 & 0.053 & 0.028 & 0.015\\
+P, reverse-set AUC & 0.029 & 0.120 & 0.269 & 0.365\\
+\midrule
+$E_{\mathrm{subj}}$ (MAE) & n.a. & 0.940 (0.365) & 0.851 (0.269) & 0.785 (0.189)\\
+$E_{\mathrm{LSPO}}$ (MAE) & n.a. & 0.523 (0.161) & 0.584 (0.115) & 0.592 (0.090)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Site identification and site information in diagnostic scores}
+
+\emph{Methods.} A multinomial logistic regression predicted the site from the features, with nested five-fold cross-validation stratified by site and five seeds. Its balanced accuracy was compared with chance, $1/S$, and with $100$ runs on permuted site labels that reuse the penalty selected most often on the real labels, an approximate rather than exact permutation reference. It was repeated with controls only and with cases only. For trained B0, C0 and L3 models, the same-diagnosis site AUC is the AUC with which the diagnostic score separates unused participants of one diagnosis at case sites from those at control sites.
+
+\emph{Results.} The site was identified with a balanced accuracy of $0.763$ among the $17$ ABIDE-I sites (chance $0.059$), $0.722$ among the $13$ ABIDE-II sites (chance $0.077$) and $0.919$ among the six ADHD-200 sites (chance $0.167$), above every permuted run (Fig.~\ref{fig:sitecode}a). Accuracy stayed far above chance with controls only ($0.683$, $0.548$, $0.911$) or cases only ($0.617$, $0.490$, $0.903$). The same-diagnosis site AUC of the class-pure model was $0.92$ at $k=2$ and $0.81$ at $k=4$; two-way bridging lowered it to $0.81$ and $0.64$, and the within-site estimator to $0.49$--$0.52$ (Fig.~\ref{fig:sitecode}b). An AUC near $0.5$ means that the score no longer ranks participants of the same diagnosis by site; it does not show that the score is independent of the site.
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_sitecode.pdf}
+\caption{Sites are easy to identify from connectivity, and the score of a pooled model trained on class-pure sites encodes them. (a)~Balanced accuracy of a multinomial logistic regression that predicts the site from the connectivity features, using all participants (grey), controls only (aqua) or cases only (gold); bars are means over five seeds of nested five-fold cross-validation, black dots are $100$ runs with permuted site labels, and dashed lines mark chance, $1/S$. (b)~Same-diagnosis site AUC: within one diagnosis, the AUC with which the diagnostic score separates participants from case sites and from control sites ($0.5$: the score does not rank them by site). Shades of red: pooled models; shades of blue: the within-site estimator L3 ($b=5$). Dots are single repeats ($50$ per condition) averaged over the two diagnoses, large markers are means (ABIDE-I, CC200).}
+\label{fig:sitecode}
+\end{figure}
+
+\subsection{Scores of individual participants}
+
+The class-pure model ranks controls held out at case sites above the cases at new sites (median rank $0.74$ against $0.52$), and cases held out at control sites below the controls at new sites ($0.24$ against $0.43$; Fig.~\ref{fig:anatomy}). Two-way bridging moves both reverse-set groups towards the middle under the pooled model ($0.64$ and $0.39$), and the within-site estimator puts them in the same order as participants at new sites ($0.46$ for controls and $0.65$ for cases).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_anatomy.pdf}
+\caption{The site shortcut ranks subjects by their site ($k=2$, ABIDE-I, CC200). Within each repeat, the scores of all evaluated subjects were converted to ranks between $0$ (most control-like) and $1$ (most case-like), and the ranks were pooled over $50$ repeats. Filled densities: cases (gold) and controls (aqua) at held-out test sites. Dashed densities: the reverse set, that is, controls held out at originally case-pure sites and cases held out at originally control-pure sites. Black ticks mark medians. (a)~The class-pure model scores reverse-set controls as more case-like than the cases at new sites. (b)~Two-way bridging with $b=5$ weakens this inverted ordering under the pooled model but does not remove it. (c)~The within-site estimator orders the reverse set in the same way as subjects at new sites.}
+\label{fig:anatomy}
+\end{figure}
+
+\subsection{Methods that use only class-pure data}
+
+\emph{Methods.} Tuning by LSPO instead of subject-level folds; removal of the subspace spanned by site means (nuisance attribute projection, NAP); per-site standardization; and group distributionally robust optimization (Group DRO) with one group per site~\cite{sagawa2020}, compared with ERM trained by the same gradient optimizer.
+
+\emph{Results.} None of these methods materially reduced the measured shortcut (Fig.~\ref{fig:pureonly}, Table~\ref{tab:methods}). LSPO tuning and NAP changed the within-site AUC by less than $0.002$ and the reverse-set AUC by less than $0.005$ at every $k$. Per-site standardization produced an AUC of exactly $0.500$ on every metric in every repeat: when each site holds one class, subtracting the site mean also subtracts the class mean. Group DRO differed from ERM by $-0.001$ ($k=2$) and $+0.000$ ($k=4$) in reverse-set AUC, also with a larger step size. The site shortcut already drove every group's training loss to $0.01$--$0.04$, so the group weights stayed close to uniform (largest weight $0.28$ against $0.25$ at $k=2$, and $0.17$ against $0.125$ at $k=4$).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_pureonly.pdf}
+\caption{Methods that use only class-pure data leave the shortcut in place (ABIDE-I, CC200, $n=40$). (a, b)~Paired differences from the pure baseline B0 in within-site AUC and in reverse-set AUC, for $k=2$ (circles) and $k=4$ (squares). Group DRO is compared with ERM trained by the same gradient optimizer. Methods on class-pure data are drawn in red; two-way bridging with $b=5$ (blue) is shown for scale. Per-site standardization is omitted because all of its AUCs equal $0.500$. (c)~Final Group DRO weight of each group (site) in each repeat; blue lines mark uniform weights $1/(2k)$. (d)~Final training loss of each group under Group DRO, on a logarithmic scale; black lines are medians and the dashed line is the loss $\log 2$ of a constant score. Dots are single repeats ($50$ per condition), large markers are means.}
+\label{fig:pureonly}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption{ABIDE-I, CC200, $k=2$, $n=40$. Methods that use only class-pure data, compared with the pure baseline B0. Paired differences from B0 are means over $50$ repeats. $^{\dagger}$Compared with ERM trained by the same gradient optimizer.}
+\label{tab:methods}
+\begin{tabular}{lcc}
+\toprule
+Method & $\Delta$ within-site AUC & $\Delta$ reverse-set AUC\\
+\midrule
+LSPO tuning & $+0.001$ & $+0.004$\\
+NAP (site-mean subspace removed) & $-0.001$ & $+0.002$\\
+Per-site standardization & all AUCs $=0.500$ & --\\
+Group DRO (group $=$ site)$^{\dagger}$ & $+0.000$ & $-0.001$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{One-class models}
+
+\emph{Methods.} O1 is a Ledoit--Wolf Mahalanobis distance to the mean of the training controls in a $30$-component principal subspace; O2 is a one-class support vector machine; O3 is the O1 distance measured from the mean of the controls at the participant's own site, with half of the controls at each test site used as its reference and excluded from evaluation. A variant, O3-eq, uses five reference controls at every training site.
+
+\emph{Results.} We had predicted, before running them, that O1 would rank the reverse set below chance and that O3 would not. Neither prediction held. O1 and O2 reached within-site AUCs of only $0.50$ and $0.55$ and reverse-set AUCs near $0.5$: they learned neither the site nor the diagnosis. O3 had a within-site AUC of $0.51$, and its reverse-set AUC fell to $0.18$--$0.31$ in the bridged designs, because a case site had only five bridging controls to estimate its reference whereas a control site had twenty. When every training site used five reference controls (O3-eq), the reverse-set AUC rose to $0.50$--$0.54$ in all four cells, as a check specified before it was run required. One-class training thus avoided the shortcut only by learning no diagnostic signal, and normative calibration requires enough controls at every site.
+
+\subsection{Same-institution designs}
+
+\emph{Methods.} LEUVEN, UCLA and UM each contributed two collections. In each repeat, one collection of each institution supplied only cases and the other only controls ($13$ per collection). This design was compared with $13$ per site from three other case-only and three other control-only sites, and with both classes drawn from all six collections. Test sites were drawn from the remaining sites.
+
+\emph{Results.} With collections from the same institution, the reverse-set AUC was $0.55$ instead of $0.20$, higher in all $50$ repeats, and the within-site AUC on new sites was $0.64$ instead of $0.57$, $0.02$ below a design in which both collections held both classes (Fig.~\ref{fig:sameinst}). The benefit depended on how similar the two collections were: LEUVEN's two collections could be told apart with an AUC of $0.98$ and its reverse-set AUC was $0.27$; for UM these values were $0.74$ and $0.59$, and for UCLA $0.53$ and $0.68$. With three institutions this pattern is descriptive. It is consistent with the theory once site effects are allowed to be correlated: the site term becomes $\sum_{s,t}c_sc_t\operatorname{Cov}(u_s,u_t)$, and two collections that share a scanner and enter with opposite classes contribute a negative cross term.
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_sameinst.pdf}
+\caption{Class-pure collections taken from the same institution carry less site shortcut than collections from different institutions (ABIDE-I, CC200; $39$ participants per class from three institutions, LEUVEN, UCLA and UM, or from six other sites). (a)~Within-site AUC on new sites and (b)~reverse-set AUC when cases and controls come from different institutions (red), from two collections of the same institution (blue), or from both collections with both classes (grey; no reverse set). Dots are single repeats ($50$), large markers are means. (c)~For each institution, the AUC with which its two collections can be told apart from their connectivity, against the reverse-set AUC of its participants in the same-institution design; three points, shown descriptively.}
+\label{fig:sameinst}
+\end{figure}
+
+\subsection{Mixing the within-site and pooled objectives}
+
+We mixed the two objectives as $(1-\lambda)\,\ell_{\mathrm{pair}}+\lambda\,\ell_{\mathrm{CE}}$ and traced $\lambda$ from $0$ (L3) to $1$ (C0) on the same training data. At $k=2$, $b=5$, one-way, moving from $\lambda=0$ to $\lambda=0.1$ lowered the reverse-set AUC from $0.603$ to $0.328$ while raising the within-site AUC by only $0.016$, and larger $\lambda$ changed little (Fig.~\ref{fig:lambda}a,b). When $\lambda$ was selected by the within-site pair AUC in inner folds, $\lambda=0$ was the most frequent choice but was chosen in only $41\%$ of repeats, and the selected models had reverse-set AUCs $0.05$--$0.18$ below L3 in the four $b=5$ cells. When $\lambda$ was selected by subject-level folds, $\lambda=0$ was chosen in $1\%$ of repeats (Fig.~\ref{fig:lambda}c). The pre-specified criteria W1 and W2 were not met (Table~\ref{tab:criteria}).
+
+\begin{figure}[tbp]
+\centering
+\widefig{figures/fig_lambda.pdf}
+\caption{Admitting even a small weight of the pooled cross-entropy brings the shortcut back, and tuning does not reliably avoid it (ABIDE-I, CC200, $b=5$). The objective is $(1-\lambda)\,\ell_{\mathrm{pair}}+\lambda\,\ell_{\mathrm{CE}}$, so $\lambda=0$ is L3 and $\lambda=1$ is C0; marker colour runs from blue ($\lambda=0$) to red ($\lambda=1$). (a)~Reverse-set AUC and (b)~within-site AUC against $\lambda$, means over $50$ repeats; solid lines $k=2$, dashed lines $k=4$, light grey one-way and dark grey two-way bridging. (c)~Distribution of the $\lambda$ selected in inner folds, pooled over the four cells, when selection maximizes the within-site pair AUC (blue) or the subject-level AUC (red).}
+\label{fig:lambda}
+\end{figure}
+
+\subsection{Natural class-pure collections}
+
+For KUL\_3, the AUC of its cases against mixed-site controls fell from $0.754$ under subject-level cross-validation to $0.430$ under leave-one-site-out evaluation, while that of mixed-site cases fell from $0.701$ to $0.677$, so that $\mathrm{DiD}=+0.30$ (mean over repeats $+0.299$ [$0.240$, $0.346$]); this AUC analysis is exploratory, added after the pre-specified analysis of sensitivity. For WashU the AUCs fell from $0.695$ to $0.305$ and from $0.591$ to $0.505$ ($+0.304$ [$0.276$, $0.343$], pre-specified), and $+0.29$ to $+0.33$ for males only, ages $7$--$13$, or separate Peking collections. For Pittsburgh ($92$ controls and $4$ cases), they fell from $0.802$ to $0.205$ and from $0.588$ to $0.495$ ($+0.50$ [$0.48$, $0.52$]).
+
+\subsection{Published multi-site methods: results and implementation}
+
+Figure~\ref{fig:published} shows the results summarized in Section~\ref{sec:res-pureonly}.
+
+\begin{figure}[!htbp]
+\centering
+\widefig{figures/fig_published.pdf}
+\caption{Two published multi-site methods on class-pure training data (ABIDE-I, $n=40$; population graph network with the Harvard-Oxford atlas, MIDA pipeline and logistic regression with CC200). Red: class-pure design B0 with the reverse set kept out of training, as in a real class-pure collection. Grey, hollow: B0 in the original transductive setting, in which the reverse set entered training without labels. Blue: two-way bridging C0 with $b=5$. (a, b)~Reverse-set AUC at $k=2$ and $k=4$; the shaded region lies below chance. (c)~Within-site AUC on new sites at $k=2$; black lines mark the same method trained on mixed sites (M). (d)~Subject-level five-fold cross-validation of B0 at $k=2$ (red) against the within-site AUC on new sites (blue); bold numbers are the mean differences. Logistic regression is inductive. Numbers above the dots are means; dots are single repeats ($50$).}
+\label{fig:published}
+\end{figure}
+
+
+We ported the TensorFlow code of the population graph network~\cite{parisot2018} line by line to PyTorch, fitted its recursive feature elimination on the training participants only, and used the Harvard-Oxford atlas of the original paper. We ran the authors' code of the MIDA pipeline~\cite{kunda2023}. Before the main runs, each method reproduced its published ABIDE-I accuracy within three percentage points, a margin fixed in advance ($69.2\%$ against $70.4\%$, and $71.9\%$ against $73.0\%$). The MIDA pipeline departed from the original in two respects. It received only age and sex as phenotypes, because full-scale IQ carries diagnostic information and eye status during the scan is set by the acquisition protocol and therefore identifies the site. Its MIDA dimension was searched only over values not larger than the number of participants in the fit; $h=300$ was unavailable in $32$ of $50$ B0 repeats when the reverse set was kept out of training. To score the reverse set after training, we projected it with the learned MIDA kernel, centred with the column means of the fitted kernel, and attached its nodes to the trained graph by the original edge rules followed by one forward pass; this out-of-sample scoring is our extension of the authors' code. Full results are in Table~\ref{tab:published}.

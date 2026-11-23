@@ -1,0 +1,66 @@
+% Paper A -- Pattern Recognition submission format (Guide for Authors, checked 2026-11-22):
+% single column, 10 pt Times, double spacing, margins 4.3/4.8/4.3/4.8 cm (T/R/B/L), 20-35 pages incl. refs.
+% Proofs and further results are in the separate supplement.tex (xr cross-references; compile main, supplement, main).
+\documentclass[preprint,10pt]{elsarticle}
+\usepackage[top=4.3cm,right=4.8cm,bottom=4.3cm,left=4.8cm]{geometry}
+\usepackage{times}
+\usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,array,longtable}
+% figures are drawn at 17 cm (PR full-page width) and may extend into the wide review margins
+\newcommand{\widefig}[1]{\makebox[\linewidth][c]{\includegraphics[width=17cm]{#1}}}
+\usepackage{etoolbox}
+\usepackage{xr-hyper}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\externaldocument{build/supplement}
+\linespread{1.667}% equals setspace's \doublespacing at 10 pt
+% let floats share pages with text instead of leaving half-empty float pages
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.07}\renewcommand{\floatpagefraction}{0.85}\setcounter{topnumber}{2}\setcounter{totalnumber}{3}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\journal{Pattern Recognition}
+\pdfsuppressptexinfo=-1% do not copy the producer metadata of included figure files
+\begin{document}
+\begin{frontmatter}
+\title{When the site predicts the diagnosis: evaluation, bridging and within-site training for multi-site neuroimaging classifiers}
+\author[ee]{Jincheng Hu}
+\author[ee,klicn,hebei]{Ping Xie}
+\author[ee]{Sha Wang}
+\author[ee]{Jiaxin Li}
+\author[ee,klicn]{Guoqian Jiang\corref{cor1}}
+\ead{jiangguoqian@ysu.edu.cn}
+\cortext[cor1]{Corresponding author.}
+\affiliation[ee]{organization={School of Electrical Engineering, Yanshan University}, city={Qinhuangdao}, postcode={066000}, country={China}}
+\affiliation[klicn]{organization={Key Laboratory of Intelligent Control and Neural Information Processing, Ministry of Education, Yanshan University}, city={Qinhuangdao}, postcode={066000}, country={China}}
+\affiliation[hebei]{organization={Hebei Key Laboratory of Intelligent Rehabilitation and Neuroregulation, Yanshan University}, city={Qinhuangdao}, postcode={066000}, country={China}}
+\begin{abstract}
+Diagnostic models for brain disorders are often trained on data pooled across sites. In clinical studies, a site frequently contributes participants of only one diagnosis, for example patients from a clinic and controls from a university laboratory. In such class-pure data the site predicts the label, so a model can use the site as a cue to the diagnosis, and subject-level cross-validation does not detect it. With an additive site-effect model, we show that class-pure data cannot separate diagnosis from site without an untestable assumption, and that adding subjects to the same sites does not reduce the site part of the error. We derive three rules: evaluate by holding out whole sites, recruit a few bridging participants of the missing diagnosis at each site, and train only on within-site patient and control pairs. A design coefficient computed from the table of subjects per site and diagnosis quantifies a recruitment plan in advance. We tested each rule with pre-specified criteria on resting-state fMRI from three cohorts covering autism and attention-deficit/hyperactivity disorder. Subject-level cross-validation overstated class-pure models by 0.37 to 0.46 in AUC, and two real class-pure collections lost about 0.30 more than mixed sites. Group-robust training and two published multi-site methods did not remove the shortcut. Bridges of the missing diagnosis outperformed as many additions of each site's own diagnosis, so what mattered was crossing the diagnostic boundary; the design coefficient ranked designs by shortcut size before training (Spearman $\rho\le-0.97$). The within-site loss kept the reverse-set AUC above chance and, with every site bridged, did not lower test AUC.
+\end{abstract}
+\begin{keyword}
+multi-site learning \sep shortcut learning \sep batch effects \sep study design \sep evaluation \sep autism
+\end{keyword}
+\end{frontmatter}
+
+\input{sections/01_intro}
+\begin{figure}[t]\centering\widefig{figures/fig1_designs.pdf}\caption{Training designs with $k=2$ sites per class. Each column is one site (Site 1 to Site 4), and each figure represents five subjects ($m=20$ subjects per site, $b=5$ bridges). (a) Each site contributes one class. (b) One-way bridging adds controls to the case sites. (c) Two-way bridging adds the missing class at every site. (d) Mixed sites with the same total size as the class-pure design in (a). Dashed boxes mark the reverse set, subjects of the opposite class held out at originally class-pure sites; $L$ is the design coefficient of Eq.~(\ref{eq:L}). Bottom: the three steps of the framework (Section~\ref{sec:framework}).}\label{fig:overview}\end{figure}
+\input{sections/02_related}
+\input{sections/03_theory}
+\input{sections/04_framework}
+\input{sections/05_setup}
+\input{sections/06_results}
+\input{sections/07_limitations}
+\input{sections/08_conclusions}
+
+\section*{CRediT authorship contribution statement}
+\textbf{Jincheng Hu:} Conceptualization, Methodology, Software, Formal analysis, Investigation, Visualization, Writing -- original draft. \textbf{Ping Xie:} Conceptualization, Funding acquisition, Supervision, Writing -- review \& editing. \textbf{Sha Wang:} Data curation, Visualization, Writing -- review \& editing. \textbf{Jiaxin Li:} Data curation, Visualization, Writing -- review \& editing. \textbf{Guoqian Jiang:} Conceptualization, Formal analysis, Supervision, Writing -- review \& editing.
+\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
+During the preparation of this work the authors used Claude (Anthropic) in order to improve the language and readability of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the publication.
+\section*{Acknowledgements}
+This work was supported by the National Natural Science Foundation of China (62471429).
+\section*{Data availability}
+ABIDE-I, ABIDE-II and ADHD-200 are public. Code and summary tables are available at \url{https://github.com/123jc-hu/class-pure-sites}.
+
+% let reference entries break across pages; otherwise unbreakable entries leave gaps at page bottoms
+\makeatletter\patchcmd{\thebibliography}{\clubpenalty4000}{\clubpenalty0}{}{\typeout{PATCHFAIL club}}\patchcmd{\thebibliography}{\widowpenalty4000}{\widowpenalty0}{}{\typeout{PATCHFAIL widow}}\makeatother
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}
