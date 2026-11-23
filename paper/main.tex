@@ -10,13 +10,15 @@
 \usepackage{etoolbox}
 \usepackage{xr-hyper}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
-\externaldocument{build/supplement}
+\externaldocument[][nocite]{build/supplement}[Paper_A_supplement_EN.pdf]
 \linespread{1.667}% equals setspace's \doublespacing at 10 pt
 % let floats share pages with text instead of leaving half-empty float pages
 \renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.8}\renewcommand{\textfraction}{0.07}\renewcommand{\floatpagefraction}{0.85}\setcounter{topnumber}{2}\setcounter{totalnumber}{3}
 \newtheorem{proposition}{Proposition}
 \newtheorem{corollary}{Corollary}
 \journal{Pattern Recognition}
+% title 14 pt and author names 8 pt, as the PR guide and editorial office require for the title page
+\makeatletter\patchcmd{\pprintMaketitle}{\Large\@title}{\fontsize{14}{17}\selectfont\@title}{}{\typeout{PATCHFAIL title}}\patchcmd{\pprintMaketitle}{\normalsize\elsauthors}{\footnotesize\elsauthors}{}{\typeout{PATCHFAIL authors}}\makeatother
 \pdfsuppressptexinfo=-1% do not copy the producer metadata of included figure files
 \begin{document}
 \begin{frontmatter}
@@ -32,7 +34,7 @@
 \affiliation[klicn]{organization={Key Laboratory of Intelligent Control and Neural Information Processing, Ministry of Education, Yanshan University}, city={Qinhuangdao}, postcode={066000}, country={China}}
 \affiliation[hebei]{organization={Hebei Key Laboratory of Intelligent Rehabilitation and Neuroregulation, Yanshan University}, city={Qinhuangdao}, postcode={066000}, country={China}}
 \begin{abstract}
-Diagnostic models for brain disorders are often trained on data pooled across sites. In clinical studies, a site frequently contributes participants of only one diagnosis, for example patients from a clinic and controls from a university laboratory. In such class-pure data the site predicts the label, so a model can use the site as a cue to the diagnosis, and subject-level cross-validation does not detect it. With an additive site-effect model, we show that class-pure data cannot separate diagnosis from site without an untestable assumption, and that adding subjects to the same sites does not reduce the site part of the error. We derive three rules: evaluate by holding out whole sites, recruit a few bridging participants of the missing diagnosis at each site, and train only on within-site patient and control pairs. A design coefficient computed from the table of subjects per site and diagnosis quantifies a recruitment plan in advance. We tested each rule with pre-specified criteria on resting-state fMRI from three cohorts covering autism and attention-deficit/hyperactivity disorder. Subject-level cross-validation overstated class-pure models by 0.37 to 0.46 in AUC, and two real class-pure collections lost about 0.30 more than mixed sites. Group-robust training and two published multi-site methods did not remove the shortcut. Bridges of the missing diagnosis outperformed as many additions of each site's own diagnosis, so what mattered was crossing the diagnostic boundary; the design coefficient ranked designs by shortcut size before training (Spearman $\rho\le-0.97$). The within-site loss kept the reverse-set AUC above chance and, with every site bridged, did not lower test AUC.
+Diagnostic models for brain disorders are often trained on data pooled across sites. In clinical studies, a site often contributes a single diagnosis, for example patients from a clinic and controls from a university laboratory. In such class-pure data the site predicts the label, so a model can use the site as a cue to the diagnosis, and subject-level cross-validation does not detect it. With an additive site-effect model, we show that class-pure data cannot separate diagnosis from site without an untestable assumption, and that adding subjects to the same sites does not reduce the site part of the error. We derive three rules: evaluate by holding out whole sites, recruit a few bridging participants of the missing diagnosis at each site, and train only on within-site patient and control pairs. We tested each rule with pre-specified criteria on resting-state fMRI from three cohorts covering autism and attention-deficit/hyperactivity disorder. Subject-level cross-validation overstated class-pure models by 0.37 to 0.46 in AUC, and two real class-pure collections lost about 0.30 more than mixed sites. Group-robust training and two published multi-site methods either kept the shortcut or lost the diagnostic signal. Bridges of the missing diagnosis outperformed as many additions of each site's own diagnosis, and a design coefficient computed from the site-by-diagnosis table ranked designs by shortcut size before training (Spearman $\rho\le-0.97$). The within-site loss kept the reverse-set AUC above chance, and with every site bridged its test AUC was within 0.01 of the pooled model.
 \end{abstract}
 \begin{keyword}
 multi-site learning \sep shortcut learning \sep batch effects \sep study design \sep evaluation \sep autism
@@ -52,12 +54,13 @@ multi-site learning \sep shortcut learning \sep batch effects \sep study design 
 
 \section*{CRediT authorship contribution statement}
 \textbf{Jincheng Hu:} Conceptualization, Methodology, Software, Formal analysis, Investigation, Visualization, Writing -- original draft. \textbf{Ping Xie:} Conceptualization, Funding acquisition, Supervision, Writing -- review \& editing. \textbf{Sha Wang:} Data curation, Visualization, Writing -- review \& editing. \textbf{Jiaxin Li:} Data curation, Visualization, Writing -- review \& editing. \textbf{Guoqian Jiang:} Conceptualization, Formal analysis, Supervision, Writing -- review \& editing.
-\section*{Declaration of generative AI and AI-assisted technologies in the writing process}
-During the preparation of this work the authors used Claude (Anthropic) in order to improve the language and readability of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the publication.
-\section*{Acknowledgements}
-This work was supported by the National Natural Science Foundation of China (62471429).
 \section*{Data availability}
 ABIDE-I, ABIDE-II and ADHD-200 are public. Code and summary tables are available at \url{https://github.com/123jc-hu/class-pure-sites}.
+\section*{Declaration of generative AI and AI-assisted technologies\\ in the manuscript preparation process}
+During the preparation of this work the authors used Claude (Anthropic) to improve the language and readability of the manuscript. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the published article.
+\section*{Acknowledgements}
+This work was supported by the National Natural Science Foundation of China (62471429).
+
 
 % let reference entries break across pages; otherwise unbreakable entries leave gaps at page bottoms
 \makeatletter\patchcmd{\thebibliography}{\clubpenalty4000}{\clubpenalty0}{}{\typeout{PATCHFAIL club}}\patchcmd{\thebibliography}{\widowpenalty4000}{\widowpenalty0}{}{\typeout{PATCHFAIL widow}}\makeatother

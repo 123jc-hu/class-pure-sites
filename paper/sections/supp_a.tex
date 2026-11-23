@@ -161,7 +161,7 @@ Mixed objective, tuned by within-site AUC & W1: reverse-set AUC $\ge$ L3 $-0.02$
  & W3: tuning by subject folds lowers reverse-set AUC by $\ge0.05$ & $0.146$ & yes\tabularnewline
 Deep pilot ($k=2$, $b=5$ two-way, repeats $0$--$9$; selects the candidate for Section~\ref{app:deep}) & T1: reverse-set AUC $\ge0.55$ and test AUC $\ge$ deep ERM $-0.01$, for each of three candidates & encoder on training data, L3 head: $0.49$; encoder on training and external data, L3 head: $0.59$; end-to-end pair loss: $0.49$ & second candidate only\tabularnewline
  & T2: for a candidate meeting T1, L3 head $-$ logistic head reverse-set AUC $\ge0.10$ & $+0.28$ & yes\tabularnewline
-Deep within-site head (Section~\ref{app:deep}) & D1: E-L3 $-$ E-CE reverse-set AUC $\ge0.10$ in each cell; test difference $\ge-0.01$ & $0.07$--$0.24$ (one cell $<0.10$); $+0.000$ & no\tabularnewline
+Deep within-site head (Section~\ref{app:deep}) & D1: E-L3 $-$ E-CE reverse-set AUC $\ge0.10$ in each cell; test difference, averaged over the four cells, $\ge-0.01$ & $0.07$--$0.24$ (one cell $<0.10$); $+0.000$ & no\tabularnewline
  & D2: E-L3 reverse-set AUC $\ge0.55$ and $\ge$ best deep baseline; test $\ge$ D-ERM $-0.01$ & $0.59$ vs $0.39$; $+0.004$ & yes\tabularnewline
 ADHD-200 & H1: WashU DiD $\ge0.10$ & $+0.30$ & yes\tabularnewline
  & R1: M $-$ P $\ge0.03$ & $0.008$ & no\tabularnewline
