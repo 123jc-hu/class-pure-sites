@@ -22,7 +22,7 @@ What a clinic needs is a score $f$ that ranks a case above a control \emph{at a 
 
 \subsection{Class-pure training is not identifiable}\label{sec:prop1}
 
-If hospital A contributes only cases with a feature mean of $2$ and hospital B only controls with a mean of $0$, the difference may be a disease effect, a hospital effect or any mix of the two; more participants measure the two means more precisely but do not tell these explanations apart. Proposition~\ref{prop:pure} states this in general and gives the error that remains under (A1).
+If hospital A contributes only cases with a feature mean of $2$ and hospital B only controls with a mean of $0$, the difference may be a disease effect, a hospital effect or any mix of the two; more participants measure the two means more precisely but do not tell these explanations apart. Proposition~\ref{prop:pure} states this in general, with the error that remains under (A1).
 
 \begin{proposition}[Class-pure sites]\label{prop:pure}
 Suppose every training site is class-pure.
@@ -41,7 +41,7 @@ For any design define
 c_s=\frac{a_s}{N_A}-\frac{t_s}{N_T},\qquad L=\sum_s c_s^2 .\label{eq:L}
 \end{equation}
 
-Here $c_s$ is the share of all training cases that site $s$ contributes minus its share of all training controls. $L$ is not a loss or a probability. The next result shows that $L$ is exactly the weight with which site effects enter the difference between the class means.
+Here $c_s$ is the share of all training cases that site $s$ contributes minus its share of all training controls. $L$ is not a loss or a probability. The next result shows that $L$ is exactly the weight of the site effects in the difference between the class means.
 
 \begin{proposition}[Design coefficient]\label{prop:L}
 Under (A0), $\bar x_A-\bar x_T=\Delta+\sum_s c_su_s+(\bar\varepsilon_A-\bar\varepsilon_T)$. Under (A1) this contrast is unbiased and
@@ -64,7 +64,7 @@ Let $U$ controls be added to the case sites and $V$ cases to the control sites. 
 
 \subsection{Within-site contrasts remove the site term}\label{sec:prop3}
 
-Bridging reduces the site term but leaves part of it when $L>0$. A case and a control from the same site carry the same site shift $u_s$, so their difference contains no site effect.
+Bridging reduces the site term but leaves part of it when $L>0$. A case and a control from the same site carry the same site shift $u_s$, which cancels in their difference.
 
 \begin{proposition}[Within-site contrasts]\label{prop:within}
 (a) Under (A0), for a case $a$ and a control $t$ at the same site, $x_a-x_t=\Delta+\varepsilon_a-\varepsilon_t$. Any deterministic procedure that uses only such within-site differences, with a fixed penalty and tuning rule, is invariant to arbitrary site shifts $u_s\mapsto u_s+\eta_s$.
@@ -77,4 +77,4 @@ Another approach is to make the representation independent of the site, but on c
 
 \subsection{From the design to the scores}\label{sec:prop4}
 
-To see how the site term reaches the predictions, consider a simplified linear scorer whose weight vector is a fixed matrix $Q$ times the estimated diagnostic direction, and the score gap $G$ of a new case from training site $s$ minus a new control from training site $r$. Proposition~\ref{prop:leak} in the Supplementary Material, which we derived after the experiments to explain their pattern, shows under (A0) and (A1), for new participants whose residuals are independent of the training sample given the shared site effects, that the pooled scorer has $\mathbb{E}\,G=\Delta^\top Q\Delta+(c_s-c_r)\operatorname{tr}(Q\Sigma_u)$. In the symmetric designs (with $b\le m$ under two-way bridging), a reverse-set pair has $c_s-c_r=-\sqrt{2L/k}$, so the expected shortcut term grows with $\sqrt{L}$; Section~\ref{sec:res-bridge} tests the corresponding relation between $L$ and the reverse-set AUC. For a same-site pair the site term vanishes: a score offset shared by all participants of a site cancels, so within-site ranking cannot identify such offsets of a fixed model, although the site term can still change the learned direction. The within-site scorer $Q\tilde\Delta$ has $\mathbb{E}\,G=\Delta^\top Q\Delta$ for every pair. In a synthetic example matching our ABIDE-I design, the expected reverse-set gap is $-0.75$ without bridges, $-0.37$ with two-way bridging at $b=5$, and $+0.21$ for the within-site scorer (Supplementary Section~\ref{sec:synthetic}). These statements concern mean score gaps of linear scorers with a fixed $Q$; equal mean gaps do not imply equal AUCs, and they give no guarantee for the AUC of regularized logistic regression or for how its penalty is selected.
+To see how the site term reaches the predictions, consider a simplified linear scorer whose weight vector is a fixed matrix $Q$ times the estimated diagnostic direction, and the score gap $G$ of a new case from training site $s$ minus a new control from training site $r$. Proposition~\ref{prop:leak} in the Supplementary Material, which we derived after the experiments to explain their pattern, shows under (A0) and (A1), for new participants whose residuals are independent of the training sample given the shared site effects, that the pooled scorer has $\mathbb{E}\,G=\Delta^\top Q\Delta+(c_s-c_r)\operatorname{tr}(Q\Sigma_u)$. In the symmetric designs (with $b\le m$ under two-way bridging), a reverse-set pair has $c_s-c_r=-\sqrt{2L/k}$, so the expected shortcut term grows with $\sqrt{L}$; Section~\ref{sec:res-bridge} tests the corresponding relation between $L$ and the reverse-set AUC. For a same-site pair the site term vanishes: a score offset shared by all participants of a site cancels, so within-site ranking cannot identify such offsets of a fixed model, although the site term can still change the learned direction. The within-site scorer $Q\tilde\Delta$ has $\mathbb{E}\,G=\Delta^\top Q\Delta$ for every pair. Supplementary Section~\ref{sec:synthetic} gives a synthetic example. These statements concern mean score gaps of linear scorers with a fixed $Q$; equal mean gaps do not imply equal AUCs, and they give no guarantee for the AUC of regularized logistic regression or for how its penalty is selected.

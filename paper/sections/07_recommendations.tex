@@ -1,0 +1,29 @@
+% Section 7 -- Practical recommendations (added 2026-11-24 at the user's request: what readers should do with their own data).
+\section{Practical recommendations}\label{sec:recommendations}
+
+Table~\ref{tab:recommend} turns the results into recommendations for three situations.
+
+\begin{table}[tbp]
+\centering
+\caption{What to do with class-pure sites. In every study, also report the table of subjects by site and diagnosis, site-level performance and the reverse-set AUC (Section~\ref{sec:eval}). Section, proposition and corollary numbers give the supporting result.}
+\label{tab:recommend}
+\makebox[\linewidth][c]{\begin{minipage}{15cm}\centering\small
+\begin{tabular}{>{\raggedright}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.74\linewidth}}
+\toprule
+Situation & What to do\\
+\midrule
+Planning a new multi-site study &
+$\bullet$ Compute $L$ (Eq.~\ref{eq:L}) from the planned subjects per site and diagnosis for each candidate plan, and choose the plan with the smallest $L$ (Sections~\ref{sec:prop2} and~\ref{sec:res-bridge}).\newline
+$\bullet$ Recruit a few participants of the missing diagnosis at every class-pure site, spread evenly over sites (Corollary~\ref{cor:alloc}) and recruited and scanned like the site's other participants (Section~\ref{sec:design}).\\
+\addlinespace
+Existing data with class-pure sites, no bridges &
+$\bullet$ Evaluate by leave-site-pair-out, not subject-level cross-validation; this needs two or more sites per diagnosis (Sections~\ref{sec:eval} and~\ref{sec:res-eval}).\newline
+$\bullet$ Add sites rather than participants at the same sites (Section~\ref{sec:res-problem}).\newline
+$\bullet$ Harmonization, reweighting or site invariance alone do not remove the shortcut (Section~\ref{sec:res-pureonly}); state that the claim assumes exchangeable sites (Proposition~\ref{prop:pure}).\\
+\addlinespace
+Some sites hold both diagnoses &
+$\bullet$ Train with L3; class-pure sites drop out of the loss (Section~\ref{sec:res-within}). The larger $L$ of the training data, the more a pooled model can rely on the site (Section~\ref{sec:res-bridge}).\\
+\bottomrule
+\end{tabular}
+\end{minipage}}
+\end{table}
