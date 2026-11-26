@@ -5,7 +5,7 @@
 本仓库是以下论文的代码和汇总结果：
 
 > **When the site predicts the diagnosis: evaluation, bridging and within-site training for multi-site neuroimaging classifiers**
-> Jincheng Hu, Ping Xie, Sha Wang, Jiaxin Li, Guoqian Jiang（燕山大学）
+> Jincheng Hu, Ping Xie, Jiaxin Li, Sha Wang, Mengchen Liu, Guoqian Jiang（燕山大学）
 
 多站点研究中，如果每个站点只提供一种诊断的被试（纯类站点），站点就能预测标签，按被试的交叉验证会奖励学会站点的模型。本文在 ABIDE-I、ABIDE-II 和 ADHD-200 的静息态 fMRI 上检验了三条规则：
 

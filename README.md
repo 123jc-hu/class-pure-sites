@@ -5,7 +5,7 @@ English | [中文](README.zh-CN.md)
 Code and summary results for the manuscript
 
 > **When the site predicts the diagnosis: evaluation, bridging and within-site training for multi-site neuroimaging classifiers**
-> Jincheng Hu, Ping Xie, Sha Wang, Jiaxin Li, Guoqian Jiang (Yanshan University)
+> Jincheng Hu, Ping Xie, Jiaxin Li, Sha Wang, Mengchen Liu, Guoqian Jiang (Yanshan University)
 
 When every site in a multi-site study contributes participants of a single diagnosis (class-pure sites), the site predicts the label and subject-level cross-validation rewards models that learn it. The study tests three rules on resting-state fMRI from ABIDE-I, ABIDE-II and ADHD-200:
 
