@@ -1,0 +1,48 @@
+% Supplementary section: partial confounding (moved from the follow-up project, 2026-11-27; scripts partial_confounding*.py, outputs/T20A).
+\section{Partial confounding}\label{app:partial}
+
+\subsection{Design}
+
+Sites with at least $20$ cases and $20$ controls were eligible ($10$ of the $17$ ABIDE-I sites). In each of $50$ repeats, $6$ eligible sites were drawn as training sites and split at random into $3$ case-leaning and $3$ control-leaning sites; the other $11$ sites were test sites with their natural composition. At each training site the cases and the controls were put in a random order once. For each $\delta\in\{0,0.1,\dots,0.5\}$, a case-leaning site contributed its first $20(0.5+\delta)$ cases and first $20(0.5-\delta)$ controls, and a control-leaning site the reverse. Every $\delta$ therefore has $120$ training participants, a prevalence of $0.5$ and $20$ participants per site, and
+\begin{equation}
+c_s=\pm\frac{2\delta}{k},\qquad L=\frac{8\delta^2}{k},\qquad \frac{L}{L_{\mathrm{pure}}}=(2\delta)^2 ,
+\end{equation}
+which the code checks for every training list. The reverse set consists of the controls in positions $11$ and later at case-leaning sites and the cases in positions $11$ and later at control-leaning sites ($185$ participants on average); they never enter training. Within a repeat all values of $\delta$ share the training sites, their roles, the test sites and the reverse set, and the training lists are nested, so contrasts across $\delta$ are paired. At $\delta=0$ the roles are nominal, and the reverse-set AUC is the reference value.
+
+\subsection{Methods}
+
+The pooled model is the logistic regression of Section~\ref{sec:methods}, tuned as C0. Site-by-class weights give each participant a weight proportional to $1/n_{s,y}$, normalized to the number of training participants, in fitting and in the inner validation AUC. ComBat with empirical Bayes and diagnosis as a protected covariate was fitted on the training participants as for the bridged designs. L1 and L3 were tuned with inner folds stratified by site and diagnosis; the number of folds was $\min(5,20(0.5-\delta))$, the size of the smallest training cell, so that every validation fold holds both classes at every site. Three further methods remove site information without labels of new sites. Per-site centring subtracts each site's training mean, as per-site standardization does in Section~\ref{sec:res-pureonly}; its reverse-set AUC is not a measure of the shortcut, because a reverse-set participant is centred with a site mean dominated by the other class, so only its test AUC is reported. Two closed-form projections remove a subspace estimated on the standardized training data: the span of the site-by-class mean offsets from the class means (rank at most $10$; at $\delta=0.5$ it equals the site-mean projection of Section~\ref{sec:res-pureonly}) or the span of the site mean offsets pooled over classes (rank at most $5$). A pooled model is then fitted on the projected data. Each method was fitted at every $\delta$ at which it is defined.
+
+The criteria in Table~\ref{tab:criteria} (PC1 to PC6) were fixed before the experiment was run. Evaluation estimates were computed for the pooled model only: subject-level five-fold cross-validation stratified by diagnosis, with tuning inside each fold, and leaving one training site out, averaging the within-site AUC over the six held-out training sites.
+
+\subsection{Results}
+
+Table~\ref{tab:partial} lists the means. The reverse-set AUC of the pooled model fell at every step of $\delta$ (paired drop from $\delta=0$ of $0.09$, $0.18$, $0.29$, $0.39$ and $0.49$, in all $50$ repeats each) and was below chance in $8$, $25$, $46$, $50$ and $50$ repeats. Site-by-class weights make site and diagnosis independent in the weighted training sample but add no information: the offsets of the minority cells, with $2$ to $8$ participants, remain poorly estimated, and the reverse-set AUC stayed $0.12$ to $0.28$ below that of L3 for $\delta\ge0.2$. The class-conditional projection behaved like the pooled model for the same reason. The projection pooled over classes kept the reverse-set AUC at its balanced value but lowered the test AUC as $\delta$ grew ($0.587$ against $0.613$ for the pooled model at $L/L_{\mathrm{pure}}=0.64$), and at $\delta=0.5$ it removed the class difference together with the site means, as per-site centring does. L1 and L3 differed by less than $0.002$ in mean test and reverse-set AUC at every $\delta$. Their lower test AUC at $L/L_{\mathrm{pure}}=0.64$ is the price of using only within-site contrasts when each site holds $2$ participants of its minority class: the effective within-site sample size $\sum_s a_st_s/(a_s+t_s)$ falls from $30$ to $10.8$, whereas the pooled model also uses contrasts between sites.
+
+\begin{table}[h]
+\centering
+\caption{Partial confounding (ABIDE-I, CC200, $k=3$, $20$ participants per training site, means over $50$ repeats). Pooled: pooled logistic regression; RW: site-by-class weights; CB: ComBat with diagnosis protected; P-cond: projection of the site-by-class offsets; P-pool: projection of the site offsets pooled over classes; Ctr: per-site centring. --: undefined, or for Ctr not a measure of the shortcut.}
+\label{tab:partial}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+$L/L_{\mathrm{pure}}$ & Pooled & RW & CB & P-cond & P-pool & Ctr & L1 & L3\\
+\midrule
+\multicolumn{9}{l}{\emph{Reverse-set AUC}}\\
+$0.00$ & $0.667$ & $0.667$ & $0.662$ & $0.664$ & $0.665$ & -- & $0.656$ & $0.657$\\
+$0.04$ & $0.579$ & $0.608$ & $0.601$ & $0.588$ & $0.683$ & -- & $0.661$ & $0.661$\\
+$0.16$ & $0.482$ & $0.539$ & $0.539$ & $0.500$ & $0.686$ & -- & $0.660$ & $0.659$\\
+$0.36$ & $0.380$ & $0.438$ & $0.473$ & $0.397$ & $0.673$ & -- & $0.646$ & $0.647$\\
+$0.64$ & $0.276$ & $0.321$ & $0.436$ & $0.288$ & $0.641$ & -- & $0.604$ & $0.603$\\
+$1.00$ & $0.181$ & -- & -- & $0.185$ & $0.500$ & -- & -- & --\\
+\midrule
+\multicolumn{9}{l}{\emph{Within-site AUC on the $11$ test sites}}\\
+$0.00$ & $0.645$ & $0.647$ & $0.649$ & $0.643$ & $0.642$ & $0.650$ & $0.649$ & $0.650$\\
+$0.04$ & $0.644$ & $0.645$ & $0.648$ & $0.642$ & $0.644$ & $0.649$ & $0.651$ & $0.651$\\
+$0.16$ & $0.639$ & $0.641$ & $0.643$ & $0.639$ & $0.637$ & $0.643$ & $0.644$ & $0.645$\\
+$0.36$ & $0.630$ & $0.633$ & $0.634$ & $0.629$ & $0.621$ & $0.630$ & $0.631$ & $0.631$\\
+$0.64$ & $0.613$ & $0.613$ & $0.610$ & $0.613$ & $0.587$ & $0.597$ & $0.597$ & $0.596$\\
+$1.00$ & $0.599$ & -- & -- & $0.599$ & $0.500$ & $0.500$ & -- & --\\
+\bottomrule
+\end{tabular}
+\end{table}

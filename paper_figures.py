@@ -859,10 +859,62 @@ def fig_published():
     plt.close(fig)
 
 
+def fig_partial():
+    """Partial confounding on ABIDE-I (T20-A): case fraction 0.5 + delta at case-leaning sites, k = 3, m = 20."""
+    deltas = ['0.0', '0.1', '0.2', '0.3', '0.4', '0.5']
+    met = defaultdict(list)
+    for r in rows('T20A/repeat_metrics.csv'):
+        met[(r['method'], r['delta'])].append(r)
+    x = np.arange(len(deltas))
+    meths = (('M0', STD, 'o', '-', 'pooled'), ('RW', DESIGN['twoway'], 's', '-', 'site-by-class weights'),
+             ('CB', DESIGN['pure'], 'D', '-', 'ComBat'), ('L3', L3C, 'o', '-', 'L3'),
+             ('L1', BLUE_RAMP['oneway'], '^', (0, (3, 1.5)), 'L1 (site intercepts)'))
+    fig, axes = plt.subplots(1, 3, figsize=(7.2, 2.35))
+    for ax, metric, ttl in ((axes[0], 'reverse_auc', 'a  Reverse-set AUC'),
+                            (axes[1], 'test_auc', 'b  Within-site AUC on new sites')):
+        ax.grid(color=GRID, lw=0.5, zorder=0)
+        if metric == 'reverse_auc':
+            ax.axhspan(0, 0.5, color=TINT, zorder=0, lw=0)
+            chance(ax)
+        for m, col, mk, ls, lab in meths:
+            xs = [i for i, d in enumerate(deltas) if met[(m, d)]]
+            ys = [np.mean([f(r[metric]) for r in met[(m, deltas[i])]]) for i in xs]
+            ax.plot(xs, ys, color=col, lw=1.4, ls=ls, marker=mk, ms=4, mec='white', mew=0.6, zorder=3, label=lab)
+        title(ax, ttl)
+    axes[0].set_ylim(0.15, 0.72)
+    axes[1].set_ylim(0.57, 0.665)
+    ax = axes[2]
+    ax.grid(color=GRID, lw=0.5, zorder=0)
+    ax.axhline(0, color=INK2, lw=0.6, ls=(0, (3, 2)), zorder=1)
+    for col, key, off, lab in ((STD, 'subject_cv_auc', -0.15, 'subject-level CV'),
+                               (L3C, 'site_cv_auc', 0.15, 'leave one training site out')):
+        xs, ys = [], []
+        for i, d in enumerate(deltas):
+            e = [f(r[key]) - f(r['test_auc']) for r in met[('M0', d)] if r[key]]
+            if e:
+                strip(ax, i + off, e, col, w=0.06, s=4)
+                xs.append(i + off)
+                ys.append(np.mean(e))
+        ax.plot(xs, ys, color=col, lw=1.4, marker='o', ms=4, mec='white', mew=0.6, zorder=4, label=lab)
+    ax.legend(loc='upper left', frameon=False, fontsize=6.3, handlelength=1.6, borderaxespad=0.2)
+    title(ax, 'c  Error of training-data estimates')
+    for ax in axes:
+        ax.set_xticks(x, ['0', '0.04', '0.16', '0.36', '0.64', '1'])
+        ax.set_xlabel(r'$L/L_{\mathrm{pure}}$')
+    axes[0].set_ylabel('AUC')
+    axes[2].set_ylabel('Estimate $-$ AUC on new sites')
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc='upper center', ncol=5, frameon=False, bbox_to_anchor=(0.36, 1.13), fontsize=6.5,
+               handlelength=1.8, columnspacing=1.2)
+    fig.tight_layout(pad=0.4, w_pad=1.0)
+    fig.savefig(OUT / 'fig_partial.pdf', bbox_inches='tight', pad_inches=0.03)
+    plt.close(fig)
+
+
 if __name__ == '__main__':
     import sys
     OUT.mkdir(parents=True, exist_ok=True)
     todo = sys.argv[1:] or ['fig2', 'fig3', 'fig_problem', 'fig_anatomy', 'fig_evaluation', 'fig_pureonly',
-                            'fig_bridging', 'fig_lambda', 'fig_replication', 'fig_sitecode', 'fig_sameinst', 'fig_published']
+                            'fig_bridging', 'fig_lambda', 'fig_replication', 'fig_sitecode', 'fig_sameinst', 'fig_published', 'fig_partial']
     for name in todo:
         globals()[name]()

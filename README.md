@@ -32,17 +32,18 @@ Code comments and docstrings are in Chinese; function and variable names are in 
 | T12B | `site_pair_validation.py` | Subject-level cross-validation and leave-site-pair-out (LSPO) estimates | Sec. 6.2 |
 | T12C | `bridge_design.py` | Bridged designs, pooled model C0, ComBat | Sec. 6.4 |
 | T12C2 | `same_class_control.py` | Same-class control S0 | Sec. 6.4 |
-| T12D | `abide_robustness.py` | Quality-controlled pool, Harvard-Oxford atlas, BrainNetCNN | Supp. S5 |
+| T12D | `abide_robustness.py` | Quality-controlled pool, Harvard-Oxford atlas, BrainNetCNN | Supp. S6 |
 | T13A, T13B | `within_site_pair_model.py`, `pair_estimator_confirmation.py` | Within-site pairwise loss L3 and site fixed-effects model L1 | Sec. 6.5 |
 | T14A | `design_rule_baselines.py` | Budget allocation and the design coefficient *L* | Sec. 6.4 |
-| T14B | `abide2_prepare.py`, `abide2_replication.py` | ABIDE-II replication | Sec. 6.6 |
+| T14B | `abide2_prepare.py`, `abide2_replication.py` | ABIDE-II replication | Sec. 6.6, Supp. S3 |
 | T15A | `group_dro.py` | Group DRO with one group per site | Sec. 6.3 |
 | T15B | `natural_pure_collections.py` | Natural class-pure collections (KUL_3, WashU) | Sec. 6.2 |
 | T16A | `pair_ce_mixture.py` | Mixing the pooled loss into L3 | Sec. 6.5 |
-| T16B, T16C | `deep_pair_pilot.py`, `deep_abide1.py` | Frozen self-supervised encoder with linear heads; deep baselines | Supp. S4 |
-| T17A | `adhd200_prepare.py`, `adhd200_replication.py` | ADHD-200 replication | Sec. 6.6 |
-| T18 | `supplementary_*.py` | Site probes, same-institution designs, corrected resampled tests | Supp. S3, S5 |
-| T19 | `published_methods*.py` | Population GCN (Parisot et al.) and TPE-MIDA (Kunda et al.) | Sec. 6.3, Supp. S3, S5 |
+| T16B, T16C | `deep_pair_pilot.py`, `deep_abide1.py` | Frozen self-supervised encoder with linear heads; deep baselines | Supp. S5 |
+| T17A | `adhd200_prepare.py`, `adhd200_replication.py` | ADHD-200 replication | Sec. 6.6, Supp. S3 |
+| T18 | `supplementary_*.py` | Site probes, same-institution designs, corrected resampled tests | Supp. S3, S6 |
+| T19 | `published_methods*.py` | Population GCN (Parisot et al.) and TPE-MIDA (Kunda et al.) | Sec. 6.3, Supp. S3, S6 |
+| T20A | `partial_confounding.py` | Partial confounding: case fraction varied continuously across training sites | Sec. 6.7, Supp. S4 |
 | | `theory_a_check.py` | Monte Carlo check of the propositions (synthetic data) | Supp. S1 |
 
 The criteria for each experiment were fixed before it was run (Supplementary Section S2). Some scripts record hashes of internal task descriptions (`docs/tasks/`, `AGENTS.md`) that are not part of this repository; remove those file names from the provenance hashes before re-running.

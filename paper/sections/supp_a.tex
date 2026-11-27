@@ -178,6 +178,11 @@ Published methods (per method) & G1: B0 reverse-set AUC $<0.5$ at $k=2$ and $4$ 
  & G3: C0 $-$ B0 reverse-set AUC $>0$ at $k=2$ and $4$ & $+0.05$ to $+0.58$ & yes (all)\tabularnewline
  & N1 (post hoc): MIDA without reverse set, B0 reverse-set AUC $<0.5$ & $0.35$, $0.40$ & yes\tabularnewline
  & N2 (post hoc): graph network without reverse set, B0 $k=4$ & $0.22$ & yes\tabularnewline
+Partial confounding (Section~\ref{app:partial}) & PC1: pooled reverse-set AUC falls with $\delta$; drop at $\delta=0.3$ $\ge0.05$ in $\ge80\%$ of repeats & $0.287$, $100\%$ & yes\tabularnewline
+ & PC2: drop at $\delta=0.2$ $\ge0.03$ & $0.184$ & yes\tabularnewline
+ & PC3: at $\delta=0.4$, L3 drop $\le$ half the pooled drop; L3 $-$ pooled test AUC $\ge-0.01$ for $\delta\le0.3$ & $0.054$ vs $0.391$; $\ge+0.001$ & yes\tabularnewline
+ & PC4, PC5: weights, L1, centring and ComBat against L3; training-data estimates & Table~\ref{tab:partial}, Fig.~\ref{fig:partial}c & descriptive\tabularnewline
+ & PC6: at $\delta=0.4$, class-conditional projection keeps $\ge$ half the pooled drop, and pooled-class projection loses $\ge0.02$ test AUC relative to the pooled model beyond their difference at $\delta=0$, each in $\ge80\%$ of repeats & $0.376$ vs $0.391$, $100\%$; $-0.023$, $70\%$ & first only\tabularnewline
 \end{longtable}
 }
 

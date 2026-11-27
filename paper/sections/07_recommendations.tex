@@ -22,6 +22,7 @@ $\bullet$ Add sites rather than participants at the same sites (Section~\ref{sec
 $\bullet$ The harmonization, reweighting and site-invariance methods we tested did not remove the shortcut (Section~\ref{sec:res-pureonly}); state that the claim assumes exchangeable sites (Proposition~\ref{prop:pure}).\\
 \addlinespace
 Some sites hold both diagnoses &
+$\bullet$ If the proportions of cases differ across sites, compute $L/L_{\mathrm{pure}}$; as it grows, leave training sites out for evaluation and train within sites rather than reweighting or harmonizing (Section~\ref{sec:res-partial}).\newline
 $\bullet$ With enough within-site pairs, train with L3; class-pure sites drop out of the loss, and with few one-way bridges L3 can cost test AUC (Section~\ref{sec:res-within}).\\
 \bottomrule
 \end{tabular}

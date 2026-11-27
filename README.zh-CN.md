@@ -32,17 +32,18 @@
 | T12B | `site_pair_validation.py` | 按被试交叉验证与站点对留出（LSPO）的估计 | 第 6.2 节 |
 | T12C | `bridge_design.py` | 桥接设计、合并模型 C0、ComBat | 第 6.4 节 |
 | T12C2 | `same_class_control.py` | 同类对照 S0 | 第 6.4 节 |
-| T12D | `abide_robustness.py` | 质控后的被试池、Harvard-Oxford 图谱、BrainNetCNN | 补充材料 S5 |
+| T12D | `abide_robustness.py` | 质控后的被试池、Harvard-Oxford 图谱、BrainNetCNN | 补充材料 S6 |
 | T13A, T13B | `within_site_pair_model.py`, `pair_estimator_confirmation.py` | 站点内配对损失 L3 与站点固定效应模型 L1 | 第 6.5 节 |
 | T14A | `design_rule_baselines.py` | 预算分配与设计系数 *L* | 第 6.4 节 |
-| T14B | `abide2_prepare.py`, `abide2_replication.py` | ABIDE-II 复现 | 第 6.6 节 |
+| T14B | `abide2_prepare.py`, `abide2_replication.py` | ABIDE-II 复现 | 第 6.6 节，补充材料 S3 |
 | T15A | `group_dro.py` | 每个站点一组的 Group DRO | 第 6.3 节 |
 | T15B | `natural_pure_collections.py` | 天然纯类集合（KUL_3、WashU） | 第 6.2 节 |
 | T16A | `pair_ce_mixture.py` | 在 L3 中混入合并损失 | 第 6.5 节 |
-| T16B, T16C | `deep_pair_pilot.py`, `deep_abide1.py` | 冻结自监督编码器加线性头；深度基线 | 补充材料 S4 |
-| T17A | `adhd200_prepare.py`, `adhd200_replication.py` | ADHD-200 复现 | 第 6.6 节 |
-| T18 | `supplementary_*.py` | 站点探针、同机构设计、校正重抽样检验 | 补充材料 S3、S5 |
-| T19 | `published_methods*.py` | 人群图卷积网络（Parisot 等）与 TPE-MIDA（Kunda 等） | 第 6.3 节，补充材料 S3、S5 |
+| T16B, T16C | `deep_pair_pilot.py`, `deep_abide1.py` | 冻结自监督编码器加线性头；深度基线 | 补充材料 S5 |
+| T17A | `adhd200_prepare.py`, `adhd200_replication.py` | ADHD-200 复现 | 第 6.6 节，补充材料 S3 |
+| T18 | `supplementary_*.py` | 站点探针、同机构设计、校正重抽样检验 | 补充材料 S3、S6 |
+| T19 | `published_methods*.py` | 人群图卷积网络（Parisot 等）与 TPE-MIDA（Kunda 等） | 第 6.3 节，补充材料 S3、S6 |
+| T20A | `partial_confounding.py` | 部分混杂：训练站点间的病例比例连续变化 | 第 6.7 节，补充材料 S4 |
 | | `theory_a_check.py` | 命题的蒙特卡洛检验（合成数据） | 补充材料 S1 |
 
 每个实验的判据都在运行之前确定（补充材料 S2）。部分脚本会对内部任务说明（`docs/tasks/`、`AGENTS.md`）计算溯源哈希，这些文件不在本仓库中；重新运行前，请从溯源哈希的文件列表中删去它们。
