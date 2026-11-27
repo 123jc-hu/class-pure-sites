@@ -146,19 +146,11 @@ Figure~\ref{fig:published} shows the results summarized in Section~\ref{sec:res-
 \label{fig:published}
 \end{figure}
 
-
 We ported the TensorFlow code of the population graph network~\cite{parisot2018} line by line to PyTorch, fitted its recursive feature elimination on the training participants only, and used the Harvard-Oxford atlas of the original paper. We ran the authors' code of the MIDA pipeline~\cite{kunda2023}. Before the main runs, each method reproduced its published ABIDE-I accuracy within three percentage points, a margin fixed in advance ($69.2\%$ against $70.4\%$, and $71.9\%$ against $73.0\%$). The MIDA pipeline departed from the original in two respects. It received only age and sex as phenotypes, because full-scale IQ carries diagnostic information and eye status during the scan is set by the acquisition protocol and therefore identifies the site. Its MIDA dimension was searched only over values not larger than the number of participants in the fit; $h=300$ was unavailable in $32$ of $50$ B0 repeats when the reverse set was kept out of training. To score the reverse set after training, we projected it with the learned MIDA kernel, centred with the column means of the fitted kernel, and attached its nodes to the trained graph by the original edge rules followed by one forward pass; this out-of-sample scoring is our extension of the authors' code. Full results are in Table~\ref{tab:published}.
 
-\subsection{Replication on ABIDE-II and ADHD-200}
+\subsection{Replication criteria}
 
-Fig.~\ref{fig:replication} shows the replication results of Section~\ref{sec:res-replication}, and Table~\ref{tab:replication} the pre-specified criteria.
-
-\begin{figure}[h]
-\centering
-\widefig{figures/fig_replication.pdf}
-\caption{The three main findings replicate on ABIDE-II (Gordon atlas, $n=20$; top row) and on ADHD-200 (CC200, $n=20$, only $k=1$; bottom row). (a, d)~Within-site AUC of P (red) and M (grey) and reverse-set AUC of P (hollow markers, dashed line). (b, e)~Estimates from training data against the within-site AUC on new sites, for subject-level cross-validation (red) and LSPO (blue), which requires $k\ge2$. (c, f)~Reverse-set AUC of C0 (red) and L3 (blue) in each bridged cell; no arrow is drawn where the two differ by less than $0.04$. Dots are single repeats, large markers are means, and dashed lines mark chance or $y=x$.}
-\label{fig:replication}
-\end{figure}
+Table~\ref{tab:replication} lists the pre-specified replication criteria of Section~\ref{sec:res-replication} (results in Fig.~\ref{fig:replication}).
 
 \begin{table}[h]
 \centering
@@ -178,3 +170,14 @@ R5: rank correlation of $L$ with C0 reverse-set AUC & met ($-0.970$, 11 cells) &
 \end{tabular}
 \end{minipage}}
 \end{table}
+
+\subsection{Within-site estimation across bridge numbers}
+
+Fig.~\ref{fig:tradeoff} shows the within-site estimator and the pooled model as bridges are added (Section~\ref{sec:res-within}).
+
+\begin{figure}[h]
+\centering
+\widefig{figures/fig3_tradeoff.pdf}
+\caption{The within-site estimator keeps the reverse-set AUC above chance from the smallest number of bridges, whereas the pooled model approaches it only as $L$ falls. Within-site test AUC against reverse-set AUC as bridges are added (ABIDE-I, CC200; means over $50$ repeats). Each point is one number of bridges per site $b$; $b=0$ is the class-pure baseline, for which L3 is undefined. Red: pooled model C0; blue: within-site estimator L3.}
+\label{fig:tradeoff}
+\end{figure}
