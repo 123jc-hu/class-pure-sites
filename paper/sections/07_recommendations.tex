@@ -5,7 +5,7 @@ Table~\ref{tab:recommend} turns the results into recommendations for three situa
 
 \begin{table}[tbp]
 \centering
-\caption{What to do with class-pure sites. In every study, also report the table of subjects by site and diagnosis and site-level performance, and the reverse-set AUC when held-out participants of the opposite diagnosis are available (Section~\ref{sec:eval}). Section, proposition and corollary numbers give the supporting result.}
+\caption{What to do with class-pure sites. In every study, also report the table of subjects by site and diagnosis and site-level performance, and the reverse-set AUC when held-out participants of the opposite diagnosis are available (Section~\ref{sec:eval}).}
 \label{tab:recommend}
 \makebox[\linewidth][c]{\begin{minipage}{15cm}\centering
 \begin{tabular}{>{\raggedright}p{0.2\linewidth}>{\raggedright\arraybackslash}p{0.74\linewidth}}
@@ -14,17 +14,17 @@ Situation & What to do\\
 \midrule
 Planning a new multi-site study &
 $\bullet$ Compute $L$ (Eq.~\ref{eq:L}) from the planned subjects per site and diagnosis; among feasible and otherwise comparable plans, prefer the smallest $L$ (Sections~\ref{sec:prop2} and~\ref{sec:res-bridge}).\newline
-$\bullet$ Recruit a few participants of the missing diagnosis at every class-pure site, spread evenly over the sites (Corollary~\ref{cor:alloc}), and recruit and scan them like the site's other participants (Section~\ref{sec:design}).\\
+$\bullet$ Recruit participants of the missing diagnosis at every class-pure site, in both directions, evenly, and like the site's other participants (Corollary~\ref{cor:alloc}, Section~\ref{sec:design}). With L3, two per site kept the reverse-set AUC at $0.59$ to $0.62$; pooled training needed bridges to make up a third of each site (Section~\ref{sec:res-within}).\\
 \addlinespace
 Existing data with class-pure sites, no bridges &
 $\bullet$ Evaluate by leave-site-pair-out, not subject-level cross-validation; this needs two or more sites per diagnosis, and independent mixed test sites are better when available (Sections~\ref{sec:eval} and~\ref{sec:res-eval}).\newline
 $\bullet$ Add sites rather than participants at the same sites (Section~\ref{sec:res-problem}).\newline
-$\bullet$ If the missing diagnosis is available from another collection acquired on the same scanner with the same protocol, for example at the same institution, pair the two; this reduced the shortcut when the two collections were alike (Supplementary Fig.~\ref{fig:sameinst}).\newline
+$\bullet$ If another collection on the same scanner and protocol, for example at the same institution, holds the missing diagnosis, pair the two; this helped when the two collections were alike (Supplementary Fig.~\ref{fig:sameinst}).\newline
 $\bullet$ The harmonization, reweighting and site-invariance methods we tested did not remove the shortcut (Section~\ref{sec:res-pureonly}); state that the claim assumes exchangeable sites (Proposition~\ref{prop:pure}).\\
 \addlinespace
 Some sites hold both diagnoses &
-$\bullet$ If the proportions of cases differ across sites, compute $L/L_{\mathrm{pure}}$; as it grows, leave training sites out for evaluation and train within sites rather than reweighting or harmonizing (Section~\ref{sec:res-partial}).\newline
-$\bullet$ With enough within-site pairs, train with L3; class-pure sites drop out of the loss, and with few one-way bridges L3 can cost test AUC (Section~\ref{sec:res-within}).\\
+$\bullet$ If the proportions of cases differ across sites, compute $L/L_{\mathrm{pure}}$: already at $0.04$ (case fractions $0.4$ and $0.6$) the pooled reverse-set AUC fell by $0.09$. Evaluate by leaving training sites out, and train within sites rather than reweight or harmonize (Section~\ref{sec:res-partial}).\newline
+$\bullet$ With enough within-site pairs, train with L3; with few one-way bridges it can cost test AUC (Section~\ref{sec:res-within}).\\
 \bottomrule
 \end{tabular}
 \end{minipage}}
