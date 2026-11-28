@@ -14,16 +14,16 @@ Situation & What to do\\
 \midrule
 Planning a new multi-site study &
 $\bullet$ Compute $L$ (Eq.~\ref{eq:L}) from the planned subjects per site and diagnosis; among feasible and otherwise comparable plans, prefer the smallest $L$ (Sections~\ref{sec:prop2} and~\ref{sec:res-bridge}).\newline
-$\bullet$ Recruit participants of the missing diagnosis at every class-pure site, in both directions, evenly, and like the site's other participants (Corollary~\ref{cor:alloc}, Section~\ref{sec:design}). With L3, two per site kept the reverse-set AUC at $0.59$ to $0.62$; pooled training needed bridges to make up a third of each site (Section~\ref{sec:res-within}).\\
+$\bullet$ Recruit participants of the missing diagnosis at every class-pure site, in both directions, evenly, and like the site's other participants (Corollary~\ref{cor:alloc}, Section~\ref{sec:design}). In ABIDE-I, two per site kept the reverse-set AUC of L3 above chance; pooled training reached chance only when bridges made up a third of each site (Section~\ref{sec:res-within}).\\
 \addlinespace
 Existing data with class-pure sites, no bridges &
 $\bullet$ Evaluate by leave-site-pair-out, not subject-level cross-validation; this needs two or more sites per diagnosis, and independent mixed test sites are better when available (Sections~\ref{sec:eval} and~\ref{sec:res-eval}).\newline
 $\bullet$ Add sites rather than participants at the same sites (Section~\ref{sec:res-problem}).\newline
-$\bullet$ If another collection on the same scanner and protocol, for example at the same institution, holds the missing diagnosis, pair the two; this helped when the two collections were alike (Supplementary Fig.~\ref{fig:sameinst}).\newline
+$\bullet$ If a collection on the same scanner and protocol holds the missing diagnosis, pair the two; this helped when the two were alike (Supplementary Fig.~\ref{fig:sameinst}).\newline
 $\bullet$ The harmonization, reweighting and site-invariance methods we tested did not remove the shortcut (Section~\ref{sec:res-pureonly}); state that the claim assumes exchangeable sites (Proposition~\ref{prop:pure}).\\
 \addlinespace
 Some sites hold both diagnoses &
-$\bullet$ If the proportions of cases differ across sites, compute $L/L_{\mathrm{pure}}$: already at $0.04$ (case fractions $0.4$ and $0.6$) the pooled reverse-set AUC fell by $0.09$. Evaluate by leaving training sites out, and train within sites rather than reweight or harmonize (Section~\ref{sec:res-partial}).\newline
+$\bullet$ If case proportions differ, compute $L/L_{\mathrm{pure}}$; in our experiment, at $0.04$ (case fractions $0.4$ and $0.6$) the pooled reverse-set AUC fell by $0.09$. Evaluate by leaving training sites out; train within sites rather than reweight or harmonize (Section~\ref{sec:res-partial}).\newline
 $\bullet$ With enough within-site pairs, train with L3; with few one-way bridges it can cost test AUC (Section~\ref{sec:res-within}).\\
 \bottomrule
 \end{tabular}
